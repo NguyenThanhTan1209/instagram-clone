@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_native_splash: ^2.3.11
 
 dev_dependencies:
   flutter_test:
@@ -21,8 +22,20 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/icon/instagram_app_icon.png"
 
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+  # color: '#ffffff'
+  image: 'assets/images/insta.png'
+  background_image: 'assets/images/splash_image_background.png'
+
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/insta.png
+    - assets/images/meta_group.png
+    - assets/images/splash_image_background.png
   fonts:
     - family: SF Pro
       fonts:
