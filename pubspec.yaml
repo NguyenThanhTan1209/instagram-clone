@@ -1,0 +1,64 @@
+name: instagram_clone
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/instagram_app_icon.png"
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: SF Pro
+      fonts:
+        - asset: assets/fonts/SF-Pro-Display-Regular.otf
+        - asset: assets/fonts/SF-Pro-Display-Bold.otf
+          weight: 700
+        - asset: assets/fonts/SF-Pro-Display-BoldItalic.otf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/SF-Pro-Display-Heavy.otf
+          weight: 900
+        - asset: assets/fonts/SF-Pro-Display-HeavyItalic.otf
+          weight: 900
+          style: italic
+        - asset: assets/fonts/SF-Pro-Display-Light.otf
+          weight: 300
+        - asset: assets/fonts/SF-Pro-Display-LightItalic.otf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/SF-Pro-Display-Medium.otf
+          weight: 500
+        - asset: assets/fonts/SF-Pro-Display-MediumItalic.otf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/SF-Pro-Display-Semibold.otf
+          weight: 600
+        - asset: assets/fonts/SF-Pro-Display-SemiboldItalic.otf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/SF-Pro-Display-Thin.otf
+          weight: 100
+        - asset: assets/fonts/SF-Pro-Display-ThinItalic.otf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/SF-Pro-Display-Ultralight.otf
+          weight: 200
+        - asset: assets/fonts/SF-Pro-Display-UltralightItalic.otf
+          weight: 200
+          style: italic
