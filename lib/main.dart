@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'src/views/ui/screens/onboarding_screen.dart';
+import 'src/views/utils/route_constant.dart';
+
 void main() {
   runApp(const MainApp());
 }
@@ -9,12 +12,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!', style: TextStyle(fontFamily: 'SF Pro')),
-        ),
-      ),
+    return MaterialApp(
+      initialRoute: RouteConstant.ONBOARDING_SCREEN_ROUTE,
+      routes: <String, WidgetBuilder>{
+        RouteConstant.ONBOARDING_SCREEN_ROUTE: (BuildContext context) => const OnboardingScreen(),
+      },
     );
   }
 }
