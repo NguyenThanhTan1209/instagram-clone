@@ -4,6 +4,7 @@ import 'package:steps_indicator/steps_indicator.dart';
 import '../../../business_logic/models/onboarding_content.dart';
 import '../../utils/color_constant.dart';
 import '../../utils/dimension_constant.dart';
+import '../../utils/route_constant.dart';
 import '../../utils/string_constant.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -36,6 +37,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   late PageController _onboardingController;
 
   bool _isLastCurrent() => _currentIndex == _onboardingContents.length - 1;
+
+  void _changeOnboardingContent() {
+    setState(() {
+      _onboardingController.nextPage(
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.linear,
+      );
+    });
+  }
+
+  void _navigateSignInScreen() {
+    Navigator.of(context).popAndPushNamed(RouteConstant.SIGN_IN_SCREEN_ROUTE);
+  }
 
   @override
   void initState() {
@@ -131,13 +145,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  if (_currentIndex < _onboardingContents.length) {
-                    setState(() {
-                      _onboardingController.nextPage(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.linear,
-                      );
-                    });
+                  if (_isLastCurrent()) {
+                    _navigateSignInScreen();
+                  }else{
+                    _changeOnboardingContent();
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -190,7 +201,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.only(top: DimensionConstant.SIZE_18, bottom: DimensionConstant.SIZE_30),
+                padding: const EdgeInsets.only(
+                    top: DimensionConstant.SIZE_18,
+                    bottom: DimensionConstant.SIZE_30),
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
