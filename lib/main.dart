@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'src/views/ui/screens/onboarding_screen.dart';
+import 'src/views/ui/screens/sign_in_screen.dart';
 import 'src/views/utils/route_constant.dart';
 import 'src/views/utils/string_constant.dart';
 
@@ -29,6 +30,8 @@ class MainApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         RouteConstant.ONBOARDING_SCREEN_ROUTE: (BuildContext context) =>
             const OnboardingScreen(),
+        RouteConstant.SIGN_IN_SCREEN_ROUTE: (BuildContext context) =>
+            const SignInScreen(),
       },
     );
   }
