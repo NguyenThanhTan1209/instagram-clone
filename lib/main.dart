@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'src/views/ui/screens/onboarding_screen.dart';
 import 'src/views/ui/screens/sign_in_screen.dart';
+import 'src/views/ui/screens/social_log_in_screen.dart';
+import 'src/views/utils/color_constant.dart';
 import 'src/views/utils/route_constant.dart';
 import 'src/views/utils/string_constant.dart';
 
@@ -25,6 +27,7 @@ class MainApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
+        scaffoldBackgroundColor: ColorConstant.WHITE,
       ),
       initialRoute: RouteConstant.ONBOARDING_SCREEN_ROUTE,
       routes: <String, WidgetBuilder>{
@@ -32,6 +35,8 @@ class MainApp extends StatelessWidget {
             const OnboardingScreen(),
         RouteConstant.SIGN_IN_SCREEN_ROUTE: (BuildContext context) =>
             const SignInScreen(),
+        RouteConstant.SOCIAL_LOG_IN_SCREEN_ROUTE: (BuildContext context) =>
+            const SocialLogInScreen(),
       },
     );
   }
