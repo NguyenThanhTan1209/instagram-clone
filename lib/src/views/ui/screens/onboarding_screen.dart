@@ -147,7 +147,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onPressed: () {
                   if (_isLastCurrent()) {
                     _navigateSignInScreen();
-                  }else{
+                  } else {
                     _changeOnboardingContent();
                   }
                 },
@@ -202,8 +202,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ],
                 ),
                 padding: const EdgeInsets.only(
-                    top: DimensionConstant.SIZE_18,
-                    bottom: DimensionConstant.SIZE_30),
+                  top: DimensionConstant.SIZE_18,
+                  bottom: DimensionConstant.SIZE_30,
+                ),
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
