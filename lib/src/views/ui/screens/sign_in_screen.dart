@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../../utils/color_constant.dart';
 import '../../utils/dimension_constant.dart';
 import '../../utils/path_constant.dart';
 import '../../utils/route_constant.dart';
 import '../../utils/string_constant.dart';
 import '../widgets/horizontal_or_line_widget.dart';
+import '../widgets/outline_sign_in_button_widget.dart';
 import '../widgets/sign_in_button_widget.dart';
 import '../widgets/sign_in_footer_widget.dart';
-import '../widgets/outline_sign_in_button_widget.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -16,7 +17,7 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void navigateToSocialLogInScreeen() {
-      Navigator.of(context).pushNamed(RouteConstant.SOCIAL_LOG_IN_SCREEN_ROUTE);
+      Navigator.of(context).pushNamed(RouteConstant.LOG_IN_SCREEN_ROUTE);
     }
 
     return Scaffold(

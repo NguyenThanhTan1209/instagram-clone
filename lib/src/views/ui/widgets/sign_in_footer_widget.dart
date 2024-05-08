@@ -45,23 +45,31 @@ class SignInFooterWidget extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: <InlineSpan>[
-                TextSpan(
-                  text: label,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: ColorConstant.BLACK.withOpacity(
-                          DimensionConstant.SIZE_0_POINT_40,
+                WidgetSpan(
+                  child: Text(
+                    label,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: ColorConstant.BLACK.withOpacity(
+                            DimensionConstant.SIZE_0_POINT_40,
+                          ),
+                          fontSize: DimensionConstant.SIZE_12,
                         ),
-                      ),
+                  ),
                 ),
                 WidgetSpan(
                   child: InkWell(
                     onTap: onPressed,
                     child: Text(
                       actionLabel,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: actionColor,
-                            fontSize: DimensionConstant.SIZE_12,
-                          ),
+                      style: label.isNotEmpty
+                          ? Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                color: actionColor,
+                                fontSize: DimensionConstant.SIZE_12,
+                              )
+                          : Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: actionColor,
+                                fontSize: DimensionConstant.SIZE_12,
+                              ),
                     ),
                   ),
                 ),

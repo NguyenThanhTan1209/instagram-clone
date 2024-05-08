@@ -79,4 +79,19 @@ class DimensionConstant {
 
   static const double SIZE_113 = 113.0;
 
+  static const double SIZE_40 = 40.0;
+
+  static const double SIZE_0_POINT_10 = 0.1;
+
+  static const double SIZE_0_POINT_5 = 0.5;
+
+  static const double SIZE_19 = 19.0;
+
+  static const double SIZE_343 = 343.0;
+
+  static const double SIZE_37 = 37.0;
+
+  static const double SIZE_17 = 17.0;
+
+  static const double SIZE_41_POINT_5 = 41.5;
 }
