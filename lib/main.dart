@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'src/views/ui/screens/log_in_screen.dart';
 import 'src/views/ui/screens/onboarding_screen.dart';
 import 'src/views/ui/screens/sign_in_screen.dart';
 import 'src/views/ui/screens/social_log_in_screen.dart';
@@ -26,6 +27,10 @@ class MainApp extends StatelessWidget {
             fontFamily: StringConstant.mainFontName,
             fontWeight: FontWeight.w600,
           ),
+          labelMedium: TextStyle(
+            fontFamily: StringConstant.mainFontName,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         scaffoldBackgroundColor: ColorConstant.WHITE,
       ),
@@ -37,6 +42,8 @@ class MainApp extends StatelessWidget {
             const SignInScreen(),
         RouteConstant.SOCIAL_LOG_IN_SCREEN_ROUTE: (BuildContext context) =>
             const SocialLogInScreen(),
+        RouteConstant.LOG_IN_SCREEN_ROUTE: (BuildContext context) =>
+            const LogInScreen(),
       },
     );
   }
