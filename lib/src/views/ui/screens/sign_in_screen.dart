@@ -7,14 +7,15 @@ import '../../utils/route_constant.dart';
 import '../../utils/string_constant.dart';
 import '../widgets/horizontal_or_line_widget.dart';
 import '../widgets/sign_in_button_widget.dart';
-import '../widgets/sign_up_button_widget.dart';
+import '../widgets/sign_in_footer_widget.dart';
+import '../widgets/outline_sign_in_button_widget.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    void navigateToSocialLogInScreeen(){
+    void navigateToSocialLogInScreeen() {
       Navigator.of(context).pushNamed(RouteConstant.SOCIAL_LOG_IN_SCREEN_ROUTE);
     }
 
@@ -65,72 +66,19 @@ class SignInScreen extends StatelessWidget {
                 const SizedBox(
                   height: DimensionConstant.SIZE_26,
                 ),
-                SignUpButtonWidget(
-                  onPressed: () {},
+                OutlineSignInButtonWidget(
                   title: StringConstant.SIGN_UP_WITH_PHONE_AND_EMAIL_TITLE,
+                  iconPath: '',
+                  onPressed: () {},
                 ),
                 const SizedBox(
                   height: DimensionConstant.SIZE_53,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: ColorConstant.WHITE,
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        offset: const Offset(
-                          DimensionConstant.SIZE_0,
-                          DimensionConstant.SIZE_NEGATIVE_0_POINT_33,
-                        ),
-                        color: ColorConstant.FF3C3C43.withOpacity(
-                          DimensionConstant.SIZE_0_POINT_29,
-                        ),
-                      ),
-                    ],
-                  ),
-                  height: DimensionConstant.SIZE_84,
-                  width: double.infinity,
-                  child: Column(
-                    children: <Widget>[
-                      const SizedBox(
-                        height: DimensionConstant.SIZE_18,
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          children: <InlineSpan>[
-                            TextSpan(
-                              text:
-                                  StringConstant.ALREADY_HAVE_AN_ACCOUNT_LABEL,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    color: ColorConstant.BLACK.withOpacity(
-                                      DimensionConstant.SIZE_0_POINT_40,
-                                    ),
-                                  ),
-                            ),
-                            WidgetSpan(
-                              child: InkWell(
-                                onTap: () {
-                                  navigateToSocialLogInScreeen();
-                                },
-                                child: Text(
-                                  StringConstant.SIGN_IN_LABEL,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(
-                                        color: ColorConstant.FF262626,
-                                        fontSize: DimensionConstant.SIZE_12,
-                                      ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                SignInFooterWidget(
+                  label: StringConstant.ALREADY_HAVE_AN_ACCOUNT_LABEL,
+                  actionLabel: StringConstant.SIGN_IN_LABEL,
+                  actionColor: ColorConstant.FF262626,
+                  onPressed: navigateToSocialLogInScreeen,
                 ),
               ],
             ),
