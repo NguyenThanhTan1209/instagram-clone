@@ -26,4 +26,14 @@ class StringConstant {
   static const String SIGN_UP_LABEL = 'Sign Up';
 
   static const String SIGN_IN_WITH_GOOGLE_TITLE = 'Sign in with Google';
+
+  static const String FORGOT_PASSWORD_LABEL = 'Forgot password?';
+
+  static const String LOG_INT_LABEL = 'Log in';
+
+  static const String USERNAME_LABEL = 'Username';
+
+  static const String PASSWORD_LABEL = 'Password';
+
+  static const String INSTAGRAM_OR_FACEBOOK = 'Instagram or Facebook';
 }
