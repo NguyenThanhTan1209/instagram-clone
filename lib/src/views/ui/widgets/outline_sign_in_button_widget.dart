@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import '../../utils/color_constant.dart';
 import '../../utils/dimension_constant.dart';
 
-class SignUpButtonWidget extends StatelessWidget {
-  const SignUpButtonWidget({
+class OutlineSignInButtonWidget extends StatelessWidget {
+  const OutlineSignInButtonWidget({
     super.key,
     required this.onPressed,
     required this.title,
+    required this.iconPath,
   });
 
   final VoidCallback onPressed;
   final String title;
+  final String iconPath;
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +33,27 @@ class SignUpButtonWidget extends StatelessWidget {
               .withOpacity(DimensionConstant.SIZE_0_POINT_18),
         ),
       ),
-      child: Text(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Visibility(
+            visible: iconPath.isNotEmpty,
+            child: Image.asset(iconPath),
+          ),
+          SizedBox(
+            width: iconPath.isEmpty
+                ? DimensionConstant.SIZE_0
+                : DimensionConstant.SIZE_15,
+          ),
+          Text(
             title,
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   fontSize: DimensionConstant.SIZE_14,
                   color: ColorConstant.BLACK,
                 ),
           ),
+        ],
+      ),
     );
   }
 }

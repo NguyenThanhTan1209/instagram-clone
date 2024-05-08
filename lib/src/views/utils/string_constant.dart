@@ -20,4 +20,10 @@ class StringConstant {
   static const String ALREADY_HAVE_AN_ACCOUNT_LABEL = 'Already have an account? ';
 
   static const String SIGN_IN_LABEL = 'Sign In';
+
+  static const String DONT_HAVE_AN_ACCOUNT_LABEL = 'Don’t have an account? ';
+
+  static const String SIGN_UP_LABEL = 'Sign Up';
+
+  static const String SIGN_IN_WITH_GOOGLE_TITLE = 'Sign in with Google';
 }

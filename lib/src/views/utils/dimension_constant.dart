@@ -77,4 +77,6 @@ class DimensionConstant {
 
   static const double SIZE_84 = 84.0;
 
+  static const double SIZE_113 = 113.0;
+
 }
