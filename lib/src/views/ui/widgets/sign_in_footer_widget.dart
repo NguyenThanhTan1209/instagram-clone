@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../utils/color_constant.dart';
 import '../../utils/dimension_constant.dart';
-import '../../utils/string_constant.dart';
 
 class SignInFooterWidget extends StatelessWidget {
   const SignInFooterWidget({

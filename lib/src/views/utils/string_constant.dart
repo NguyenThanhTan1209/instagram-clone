@@ -36,4 +36,10 @@ class StringConstant {
   static const String PASSWORD_LABEL = 'Password';
 
   static const String INSTAGRAM_OR_FACEBOOK = 'Instagram or Facebook';
+
+  static const String POSTS_LABEL = 'Posts';
+  static const String FOLLOWERS_LABEL = 'Followers';
+  static const String FOLLOWING_LABEL = 'Following';
+
+  static const String EDIT_PROFILE_BUTTON_LABEL = 'Edit Profile';
 }
