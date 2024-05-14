@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'src/views/ui/screens/home_screen.dart';
 import 'src/views/ui/screens/log_in_screen.dart';
 import 'src/views/ui/screens/onboarding_screen.dart';
 import 'src/views/ui/screens/sign_in_screen.dart';
@@ -44,6 +45,8 @@ class MainApp extends StatelessWidget {
             const SocialLogInScreen(),
         RouteConstant.LOG_IN_SCREEN_ROUTE: (BuildContext context) =>
             const LogInScreen(),
+        RouteConstant.HOME_SCREEN_ROUTE: (BuildContext context) =>
+            const HomeScreen(),
       },
     );
   }

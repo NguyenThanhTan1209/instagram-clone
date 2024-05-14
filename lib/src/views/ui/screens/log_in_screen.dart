@@ -18,17 +18,22 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
   late TextEditingController _userNameController;
   late TextEditingController _passwordController;
-  late bool _isUsernameNotEmpty;
   late bool _isHidePassword;
   final String _spacing = ' ';
+  late bool _isValidLoginInfo;
+  late bool _isUsernameValid;
+  late bool _isPasswordValid;
 
   @override
   void initState() {
     super.initState();
     _userNameController = TextEditingController();
     _passwordController = TextEditingController();
-    _isUsernameNotEmpty = false;
     _isHidePassword = true;
+    _isUsernameValid = _userNameController.text.trim().isNotEmpty &&
+        _userNameController.text.contains(_spacing);
+    _isPasswordValid = _passwordController.text.trim().isNotEmpty;
+    _isValidLoginInfo = false;
   }
 
   @override
@@ -40,6 +45,21 @@ class _LogInScreenState extends State<LogInScreen> {
 
   void _navigateToSocialLogInScreen() {
     Navigator.of(context).pushNamed(RouteConstant.SOCIAL_LOG_IN_SCREEN_ROUTE);
+  }
+
+  //? temp
+  void _logIn(String username, String password) {
+    if (username.trim().contains('tan_newc') &&
+        password.trim().contains('123456@#')) {
+      Navigator.of(context)
+    .pushNamedAndRemoveUntil(RouteConstant.HOME_SCREEN_ROUTE, (Route<dynamic> route) => false);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Incorrect username or password'),
+        ),
+      );
+    }
   }
 
   @override
@@ -90,7 +110,14 @@ class _LogInScreenState extends State<LogInScreen> {
                     horizontal: DimensionConstant.SIZE_16,
                   ),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _isValidLoginInfo
+                        ? () {
+                            _logIn(
+                              _userNameController.text,
+                              _passwordController.text,
+                            );
+                          }
+                        : null,
                     style: ElevatedButton.styleFrom(
                       minimumSize:
                           const Size.fromHeight(DimensionConstant.SIZE_44),
@@ -101,6 +128,10 @@ class _LogInScreenState extends State<LogInScreen> {
                       ),
                       backgroundColor: ColorConstant.FF3797EF,
                       foregroundColor: ColorConstant.WHITE,
+                      disabledBackgroundColor: ColorConstant.FF3797EF
+                          .withOpacity(DimensionConstant.SIZE_0_POINT_5),
+                      disabledForegroundColor: ColorConstant.WHITE
+                          .withOpacity(DimensionConstant.SIZE_0_POINT_5),
                     ),
                     child: Text(
                       StringConstant.LOG_INT_LABEL,
@@ -194,6 +225,12 @@ class _LogInScreenState extends State<LogInScreen> {
         horizontal: DimensionConstant.SIZE_16,
       ),
       child: TextField(
+        onChanged: (String value) {
+          setState(() {
+            _isPasswordValid = value.isNotEmpty;
+            _isValidLoginInfo = _isUsernameValid && _isPasswordValid;
+          });
+        },
         obscureText: _isHidePassword,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontSize: DimensionConstant.SIZE_14,
@@ -258,7 +295,8 @@ class _LogInScreenState extends State<LogInScreen> {
       child: TextField(
         onChanged: (String value) {
           setState(() {
-            _isUsernameNotEmpty = value.isNotEmpty && !value.contains(_spacing);
+            _isUsernameValid = value.isNotEmpty && !value.contains(_spacing);
+            _isValidLoginInfo = _isUsernameValid && _isPasswordValid;
           });
         },
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -298,7 +336,7 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
           contentPadding: EdgeInsets.zero,
           suffixIcon: Visibility(
-            visible: _isUsernameNotEmpty,
+            visible: _isUsernameValid,
             child: Image.asset(
               PathConstant.GREEN_TICK_ICON_PATH,
               width: DimensionConstant.SIZE_20,

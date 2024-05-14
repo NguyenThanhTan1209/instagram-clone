@@ -7,4 +7,6 @@ class RouteConstant {
   static const String SOCIAL_LOG_IN_SCREEN_ROUTE = '/social_log_in_screen';
 
   static const String LOG_IN_SCREEN_ROUTE = '/log_in_screen';
+
+  static const String HOME_SCREEN_ROUTE = '/home_screen';
 }
