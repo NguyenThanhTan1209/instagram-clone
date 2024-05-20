@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'src/views/ui/screens/edit_profile_screen.dart';
 import 'src/views/ui/screens/home_screen.dart';
 import 'src/views/ui/screens/log_in_screen.dart';
 import 'src/views/ui/screens/onboarding_screen.dart';
@@ -27,10 +28,12 @@ class MainApp extends StatelessWidget {
           bodyLarge: TextStyle(
             fontFamily: StringConstant.mainFontName,
             fontWeight: FontWeight.w600,
+            color: ColorConstant.FF262626,
           ),
           labelMedium: TextStyle(
             fontFamily: StringConstant.mainFontName,
             fontWeight: FontWeight.w500,
+            color: ColorConstant.FF262626,
           ),
         ),
         scaffoldBackgroundColor: ColorConstant.WHITE,
@@ -47,6 +50,8 @@ class MainApp extends StatelessWidget {
             const LogInScreen(),
         RouteConstant.HOME_SCREEN_ROUTE: (BuildContext context) =>
             const HomeScreen(),
+        RouteConstant.EDIT_PROFILE_SCREEN_ROUTE: (BuildContext context) =>
+            const EditProfileScreen(),
       },
     );
   }
