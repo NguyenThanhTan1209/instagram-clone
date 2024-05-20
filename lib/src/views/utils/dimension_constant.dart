@@ -123,7 +123,7 @@ class DimensionConstant {
 
   static const double SIZE_21 = 21.0;
 
-  static const double SIZE_64= 64.0;
+  static const double SIZE_64 = 64.0;
 
   static const double SIZE_9 = 9.0;
 
@@ -136,4 +136,20 @@ class DimensionConstant {
   static const double SIZE_42 = 42.0;
 
   static const double SIZE_0_POINT_30 = 0.30;
+
+  static const double SIZE_88 = 88.0;
+
+  static const double SIZE_18_POINT_5 = 18.5;
+
+  static const double SIZE_12_POINT_5 = 12.5;
+
+  static const double SIZE_95 = 95.0;
+
+  static const double SIZE_48 = 48.0;
+
+  static const double SIZE_96 = 96.0;
+
+  static const double SIZE_29 = 29.0;
+
+  static const double SIZE_80_POINT_5 = 80.5;
 }

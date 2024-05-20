@@ -293,6 +293,7 @@ class _LogInScreenState extends State<LogInScreen> {
         horizontal: DimensionConstant.SIZE_16,
       ),
       child: TextField(
+        autofocus: true,
         onChanged: (String value) {
           setState(() {
             _isUsernameValid = value.isNotEmpty && !value.contains(_spacing);
