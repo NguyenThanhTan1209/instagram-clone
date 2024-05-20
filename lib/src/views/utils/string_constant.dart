@@ -42,4 +42,43 @@ class StringConstant {
   static const String FOLLOWING_LABEL = 'Following';
 
   static const String EDIT_PROFILE_BUTTON_LABEL = 'Edit Profile';
+
+  static const String CANCEL_LABEL = 'Cancel';
+
+  static const String COMPLETE_LABEL = 'Complete';
+
+  static const String CHANGE_PROFILE_PHOTO_LABEL = 'Change Profile Photo';
+
+  static const String EDIT_NAME_LABEL = 'Name';
+
+  static const String EDIT_NAME_PLACEHOLDER = 'Enter your name';
+
+  static const String EDIT_USERNAME_LABEL = 'Username';
+
+  static const String EDIT_USERNAME_PLACEHOLDER = 'Enter your username';
+
+  static const String EDIT_WEBSITE_LABEL = 'Website';
+
+  static const String EDIT_WEBSITE_PLACEHOLDER = 'Website link';
+
+  static const String EDIT_BIO_LABEL = 'Bio';
+
+  static const String EDIT_BIO_PLACEHOLDER = 'Add a Bio';
+
+  static const String EDIT_EMAIL_LABEL = 'Email';
+
+  static const String EDIT_EMAIL_PLACEHOLDER = 'Enter your email address';
+
+  static const String EDIT_PHONE_LABEL = 'Phone';
+
+  static const String EDIT_PHONE_PLACEHOLDER = 'e.g. +91 123 456 7890';
+
+  static const String EDIT_GENDER_LABEL = 'Gender';
+
+  static const String EDIT_GENDER_PLACEHOLDER = 'Choose Gender';
+
+  static const String SWITCH_PRO_ACCOUNT_LABEL = 'Switch to Professional Account';
+
+  static const String PRIVATE_INFO_LABEL = 'Private Information';
+
 }

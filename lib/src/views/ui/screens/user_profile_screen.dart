@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:sticky_headers/sticky_headers/widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../business_logic/models/post.dart';
@@ -8,6 +7,7 @@ import '../../../business_logic/models/user.dart';
 import '../../utils/color_constant.dart';
 import '../../utils/dimension_constant.dart';
 import '../../utils/path_constant.dart';
+import '../../utils/route_constant.dart';
 import '../../utils/string_constant.dart';
 import '../widgets/profile_infomation_column_widget.dart';
 
@@ -28,6 +28,10 @@ class _UserProfileScreenState extends State<UserProfileScreen>
   void initState() {
     super.initState();
     tabController = TabController(length: profileContentLength, vsync: this);
+  }
+
+  void _navigateEditProfileScreen() {
+    Navigator.of(context).pushNamed(RouteConstant.EDIT_PROFILE_SCREEN_ROUTE, arguments: currentUser);
   }
 
   @override
@@ -218,7 +222,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                       horizontal: DimensionConstant.SIZE_16,
                     ),
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: _navigateEditProfileScreen,
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
                           color: ColorConstant.FF3C3C43
