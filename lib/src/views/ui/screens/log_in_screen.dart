@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../business_logic/blocs/authentication/authentication_bloc.dart';
+import '../../../business_logic/blocs/authentication/authentication_event.dart';
+import '../../../business_logic/blocs/authentication/authentication_state.dart';
 import '../../utils/color_constant.dart';
 import '../../utils/dimension_constant.dart';
 import '../../utils/path_constant.dart';
@@ -48,18 +52,10 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   //? temp
-  void _logIn(String username, String password) {
-    if (username.trim().contains('tan_newc') &&
-        password.trim().contains('123456@#')) {
-      Navigator.of(context)
-    .pushNamedAndRemoveUntil(RouteConstant.HOME_SCREEN_ROUTE, (Route<dynamic> route) => false);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Incorrect username or password'),
-        ),
-      );
-    }
+  void _logIn(BuildContext context, String username, String password) {
+    context.read<AuthenticationBloc>().add(
+          SignInWithEmailAndPassword(username: username, password: password),
+        );
   }
 
   @override
@@ -113,6 +109,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     onPressed: _isValidLoginInfo
                         ? () {
                             _logIn(
+                              context,
                               _userNameController.text,
                               _passwordController.text,
                             );
@@ -133,12 +130,40 @@ class _LogInScreenState extends State<LogInScreen> {
                       disabledForegroundColor: ColorConstant.WHITE
                           .withOpacity(DimensionConstant.SIZE_0_POINT_5),
                     ),
-                    child: Text(
-                      StringConstant.LOG_INT_LABEL,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            fontSize: DimensionConstant.SIZE_14,
+                    child:
+                        BlocConsumer<AuthenticationBloc, AuthenticationState>(
+                      listener:
+                          (BuildContext context, AuthenticationState state) {
+                        if (state is AuthenticationSuccess) {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            RouteConstant.HOME_SCREEN_ROUTE,
+                            (Route<dynamic> route) => false,
+                          );
+                        }
+                        if(state is AuthenticationFailed){
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(state.error),
+                            ),
+                          );
+                        }
+                      },
+                      builder:
+                          (BuildContext context, AuthenticationState state) {
+                        if (state is AuthenticationInProgress) {
+                          return const CircularProgressIndicator(
                             color: ColorConstant.WHITE,
-                          ),
+                          );
+                        }
+                        return Text(
+                          StringConstant.LOG_INT_LABEL,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    fontSize: DimensionConstant.SIZE_14,
+                                    color: ColorConstant.WHITE,
+                                  ),
+                        );
+                      },
                     ),
                   ),
                 ),
