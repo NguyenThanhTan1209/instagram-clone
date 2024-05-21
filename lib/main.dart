@@ -1,5 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nested/nested.dart';
 
+import 'firebase_options.dart';
+import 'src/business_logic/blocs/authentication/authentication_bloc.dart';
 import 'src/views/ui/screens/edit_profile_screen.dart';
 import 'src/views/ui/screens/home_screen.dart';
 import 'src/views/ui/screens/log_in_screen.dart';
@@ -10,7 +15,9 @@ import 'src/views/utils/color_constant.dart';
 import 'src/views/utils/route_constant.dart';
 import 'src/views/utils/string_constant.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MainApp());
 }
 
@@ -19,40 +26,47 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(
-            fontFamily: StringConstant.mainFontName,
-          ),
-          bodyLarge: TextStyle(
-            fontFamily: StringConstant.mainFontName,
-            fontWeight: FontWeight.w600,
-            color: ColorConstant.FF262626,
-          ),
-          labelMedium: TextStyle(
-            fontFamily: StringConstant.mainFontName,
-            fontWeight: FontWeight.w500,
-            color: ColorConstant.FF262626,
-          ),
+    return MultiBlocProvider(
+      providers: <SingleChildWidget>[
+        BlocProvider<AuthenticationBloc>(
+          create: (BuildContext context) => AuthenticationBloc(),
         ),
-        scaffoldBackgroundColor: ColorConstant.WHITE,
+      ],
+      child: MaterialApp(
+        theme: ThemeData(
+          textTheme: const TextTheme(
+            bodyMedium: TextStyle(
+              fontFamily: StringConstant.mainFontName,
+            ),
+            bodyLarge: TextStyle(
+              fontFamily: StringConstant.mainFontName,
+              fontWeight: FontWeight.w600,
+              color: ColorConstant.FF262626,
+            ),
+            labelMedium: TextStyle(
+              fontFamily: StringConstant.mainFontName,
+              fontWeight: FontWeight.w500,
+              color: ColorConstant.FF262626,
+            ),
+          ),
+          scaffoldBackgroundColor: ColorConstant.WHITE,
+        ),
+        initialRoute: RouteConstant.ONBOARDING_SCREEN_ROUTE,
+        routes: <String, WidgetBuilder>{
+          RouteConstant.ONBOARDING_SCREEN_ROUTE: (BuildContext context) =>
+              const OnboardingScreen(),
+          RouteConstant.SIGN_IN_SCREEN_ROUTE: (BuildContext context) =>
+              const SignInScreen(),
+          RouteConstant.SOCIAL_LOG_IN_SCREEN_ROUTE: (BuildContext context) =>
+              const SocialLogInScreen(),
+          RouteConstant.LOG_IN_SCREEN_ROUTE: (BuildContext context) =>
+              const LogInScreen(),
+          RouteConstant.HOME_SCREEN_ROUTE: (BuildContext context) =>
+              const HomeScreen(),
+          RouteConstant.EDIT_PROFILE_SCREEN_ROUTE: (BuildContext context) =>
+              const EditProfileScreen(),
+        },
       ),
-      initialRoute: RouteConstant.ONBOARDING_SCREEN_ROUTE,
-      routes: <String, WidgetBuilder>{
-        RouteConstant.ONBOARDING_SCREEN_ROUTE: (BuildContext context) =>
-            const OnboardingScreen(),
-        RouteConstant.SIGN_IN_SCREEN_ROUTE: (BuildContext context) =>
-            const SignInScreen(),
-        RouteConstant.SOCIAL_LOG_IN_SCREEN_ROUTE: (BuildContext context) =>
-            const SocialLogInScreen(),
-        RouteConstant.LOG_IN_SCREEN_ROUTE: (BuildContext context) =>
-            const LogInScreen(),
-        RouteConstant.HOME_SCREEN_ROUTE: (BuildContext context) =>
-            const HomeScreen(),
-        RouteConstant.EDIT_PROFILE_SCREEN_ROUTE: (BuildContext context) =>
-            const EditProfileScreen(),
-      },
     );
   }
 }
