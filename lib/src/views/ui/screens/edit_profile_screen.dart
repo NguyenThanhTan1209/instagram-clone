@@ -56,8 +56,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final User userProfile =
-        ModalRoute.of(context)!.settings.arguments! as User;
+    final UserModel userProfile =
+        ModalRoute.of(context)!.settings.arguments! as UserModel;
 
     return Scaffold(
       appBar: AppBar(

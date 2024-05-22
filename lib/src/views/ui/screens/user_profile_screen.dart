@@ -20,7 +20,7 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen>
     with SingleTickerProviderStateMixin {
-  final User currentUser = User.mockData();
+  final UserModel currentUser = UserModel.mockData();
   final int profileContentLength = 2;
   late final TabController tabController;
 

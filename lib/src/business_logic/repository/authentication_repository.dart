@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../models/result.dart';
+import '../models/user.dart';
 import '../services/authentication_provider.dart';
 
 class AuthenticationRepository {
   final AuthenticationProvider _authenticationProvider = AuthenticationProvider();
 
-    Future<Result?> signInWithEmailAndPassword({
+    Future<UserModel?> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) {
