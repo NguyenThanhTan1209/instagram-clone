@@ -20,10 +20,30 @@ class AuthenticationBloc
           email: event.username,
           password: event.password,
         );
-        if(user != null){
+        if (user != null) {
           emit(AuthenticationSuccess(user: user));
-        }else{
+        } else {
           emit(AuthenticationFailed(error: 'Username or Password incorrect'));
+        }
+      } catch (e) {
+        log(e.toString());
+      }
+    });
+
+    on<SignUpWithEmailAndPassword>((
+      SignUpWithEmailAndPassword event,
+      Emitter<AuthenticationState> emit,
+    ) async {
+      emit(AuthenticationInProgress());
+      try {
+        final UserModel? user = await _repository.signUpWithEmailAndPassword(
+          email: event.username,
+          password: event.password,
+        );
+        if (user!=null) {
+          emit(AuthenticationSuccess(user: user));
+        } else {
+          emit(AuthenticationFailed(error: 'Sign up failed'));
         }
       } catch (e) {
         log(e.toString());
