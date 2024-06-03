@@ -9,7 +9,7 @@ class FirebaseDatabaseProvider {
 
   Future<int> createUser(UserModel userModel) async {
     final DocumentReference<Map<String, dynamic>> userDoc =
-        _database.collection('users').doc();
+        _database.collection('users').doc(userModel.userID);
 
     final UserModel user = UserModel(
       userID: userDoc.id,
@@ -28,6 +28,35 @@ class FirebaseDatabaseProvider {
       await userDoc.set(json);
       return 1;
     } on Exception catch (e) {
+      log(e.toString());
+      return 0;
+    }
+  }
+
+  Future<UserModel?> readUserByID(String userID) {
+    final Future<DocumentSnapshot<Map<String, dynamic>>> userDoc =
+        _database.collection('users').doc(userID).get();
+
+    return userDoc.then(
+      (DocumentSnapshot<Map<String, dynamic>> value) {
+        final Map<String, dynamic>? data = value.data();
+        if (data != null) {
+          return UserModel.fromJson(data);
+        } else {
+          return null;
+        }
+      },
+    );
+  }
+
+  Future<int> updateUser(UserModel user) async {
+    final DocumentReference<Map<String, dynamic>> userDoc =
+        _database.collection('users').doc(user.userID);
+
+    try {
+      await userDoc.update(user.toJson());
+      return 1;
+    } catch (e) {
       log(e.toString());
       return 0;
     }
