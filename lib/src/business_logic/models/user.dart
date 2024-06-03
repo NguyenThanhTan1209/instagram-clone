@@ -3,7 +3,6 @@ import 'story.dart';
 import 'story_album.dart';
 
 class UserModel {
-
   UserModel({
     required this.userID,
     required this.userName,
@@ -13,13 +12,14 @@ class UserModel {
     this.email = '',
     this.bio = '',
     this.password = '',
-    this.avatarPath = 'https://i.pinimg.com/originals/a0/4d/84/a04d849cf591c2f980548b982f461401.jpg',
+    this.avatarPath =
+        'https://i.pinimg.com/originals/a0/4d/84/a04d849cf591c2f980548b982f461401.jpg',
     this.postTotal = 0,
     this.followerTotal = 0,
     this.followingTotal = 0,
     this.description = '',
     this.website = '',
-    this.posts = const<Post>[],
+    this.posts = const <Post>[],
     this.storieAlbums = const <StoryAlbum>[],
   });
 
@@ -247,15 +247,28 @@ class UserModel {
     );
   }
 
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      userID: json['userID'] as String,
+      userName: json['userName'] as String,
+      name: json['name'] as String,
+      website: json['website'] as String,
+      bio: json['bio'] as String,
+      email: json['email'] as String,
+      phone: json['phone'] as String,
+      gender: json['gender'] as String,
+    );
+  }
+
   Map<String, dynamic> toJson() => <String, dynamic>{
-      'userID': userID,
-      'userName': userName,
-      'name': name,
-      'website': website,
-      'bio': bio,
-      'email': email,
-      'phone': phone,
-      'gender': gender,
+        'userID': userID,
+        'userName': userName,
+        'name': name,
+        'website': website,
+        'bio': bio,
+        'email': email,
+        'phone': phone,
+        'gender': gender,
       };
 
   final String userID;
