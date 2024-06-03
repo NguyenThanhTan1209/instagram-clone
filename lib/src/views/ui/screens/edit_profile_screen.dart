@@ -1,5 +1,12 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../business_logic/blocs/user/user_bloc.dart';
+import '../../../business_logic/blocs/user/user_event.dart';
+import '../../../business_logic/blocs/user/user_state.dart';
 import '../../../business_logic/models/user.dart';
 import '../../utils/color_constant.dart';
 import '../../utils/dimension_constant.dart';
@@ -20,13 +27,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late final TextEditingController _bioController;
   late final TextEditingController _emailController;
   late final TextEditingController _phoneController;
-  late final TextEditingController _genderController;
   final List<String> _genders = <String>[
     'Male',
     'Female',
     'Other',
   ];
-  String _currentSelectedGenderValue = '';
+  final ValueNotifier<String> _currentSelectedGenderValue =
+      ValueNotifier<String>('');
+  late bool _isNameEditValid;
+  late bool _isUsernameEditValid;
+  late bool _isWebsiteEditValid;
+  late bool _isGenderEditValid;
 
   @override
   void initState() {
@@ -37,9 +48,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _bioController = TextEditingController();
     _emailController = TextEditingController();
     _phoneController = TextEditingController();
-    _genderController = TextEditingController();
-    // _userProfile =
-    //     ModalRoute.of(context)!.settings.arguments! as User;
+    _checkValidInformation();
   }
 
   @override
@@ -51,13 +60,84 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _bioController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _genderController.dispose();
+  }
+
+  void _checkValidInformation() {
+    _isNameEditValid = _nameController.text.trim().isNotEmpty;
+    _isUsernameEditValid = _usernameController.text.trim().isNotEmpty &&
+        !_usernameController.text.trim().contains(' ');
+    _isWebsiteEditValid = _websiteController.text.trim().contains('.');
+    _isGenderEditValid = _currentSelectedGenderValue.value.isNotEmpty;
+  }
+
+  void _backToUserProfileScreen() {
+    Navigator.of(context).pop();
+  }
+
+  void _showSnackBar({
+    required String title,
+    required String message,
+    required ContentType contentType,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.fixed,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: title,
+          message: message,
+          contentType: contentType,
+        ),
+      ),
+    );
+  }
+
+  void _updateUserProfile(UserModel updateUser) {
+    _checkValidInformation();
+    if (!_isNameEditValid) {
+      _showSnackBar(
+        title: 'Update failed',
+        message: 'Name cannot be empty',
+        contentType: ContentType.failure,
+      );
+    } else if (!_isUsernameEditValid) {
+      _showSnackBar(
+        title: 'Update failed',
+        message: 'Username cannot contain spaces',
+        contentType: ContentType.failure,
+      );
+    } else if (!_isWebsiteEditValid) {
+      _showSnackBar(
+        title: 'Update failed',
+        message: 'Website is not in correct format',
+        contentType: ContentType.failure,
+      );
+    } else if (!_isGenderEditValid) {
+      _showSnackBar(
+        title: 'Update failed',
+        message: 'Gender cannot be empty',
+        contentType: ContentType.failure,
+      );
+    } else {
+      context
+          .read<UserBloc>()
+          .add(UpdateUserInformation(updateUser: updateUser));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final User userProfile =
-        ModalRoute.of(context)!.settings.arguments! as User;
+    final UserModel userProfile =
+        ModalRoute.of(context)!.settings.arguments! as UserModel;
+
+    _nameController.text = userProfile.name;
+    _usernameController.text = userProfile.userName;
+    _websiteController.text = userProfile.website;
+    _bioController.text = userProfile.bio;
+    _emailController.text = userProfile.email;
+    _phoneController.text = userProfile.phone;
+    _currentSelectedGenderValue.value = userProfile.gender;
 
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +150,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
         ),
         leading: InkWell(
-          onTap: () {},
+          onTap: _backToUserProfileScreen,
           child: Center(
             child: Text(
               StringConstant.CANCEL_LABEL,
@@ -82,7 +162,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         actions: <Widget>[
           InkWell(
-            onTap: () {},
+            onTap: () {
+              _updateUserProfile(
+                UserModel(
+                  userID: userProfile.userID,
+                  userName: _usernameController.text.trim(),
+                  name: _nameController.text.trim(),
+                  website: _websiteController.text.trim(),
+                  bio: _bioController.text.trim(),
+                  email: userProfile.email,
+                  phone: _phoneController.text.trim(),
+                  gender: _currentSelectedGenderValue.value.trim(),
+                ),
+              );
+            },
             child: Text(
               StringConstant.COMPLETE_LABEL,
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
@@ -93,7 +186,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ],
       ),
-      body: Form(
+      body: BlocListener<UserBloc, UserState>(
+        listener: (BuildContext context, UserState state) {
+          if (state is UserSuccessState) {
+            _showSnackBar(
+              title: 'Success',
+              message: 'Updated profile successfully',
+              contentType: ContentType.success,
+            );
+            Navigator.of(context).pop();
+          }
+          if (state is UserFailedState) {
+            _showSnackBar(
+              title: 'Failure',
+              message: state.error,
+              contentType: ContentType.failure,
+            );
+          }
+        },
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -207,6 +317,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: DimensionConstant.SIZE_14,
                     ),
                     EditProfileTextFieldWidget(
+                      isEnable: false,
                       label: StringConstant.EDIT_EMAIL_LABEL,
                       placeholder: StringConstant.EDIT_EMAIL_PLACEHOLDER,
                       controller: _emailController,
@@ -243,44 +354,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ),
                                 ),
                               ),
-                              child: DropdownButton<String>(
-                                iconSize: DimensionConstant.SIZE_0,
-                                items: _genders.map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
+                              child: ValueListenableBuilder<String>(
+                                valueListenable: _currentSelectedGenderValue,
+                                builder: (
+                                  BuildContext context,
+                                  String value,
+                                  Widget? child,
+                                ) {
+                                  return DropdownButton<String>(
+                                    iconSize: DimensionConstant.SIZE_0,
+                                    items: _genders.map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                    hint: value.isEmpty
+                                        ? Text(
+                                            StringConstant
+                                                .EDIT_GENDER_PLACEHOLDER,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(
+                                                  fontSize:
+                                                      DimensionConstant.SIZE_16,
+                                                  color: ColorConstant.C5C5C7,
+                                                ),
+                                          )
+                                        : Text(
+                                            value,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(
+                                                  fontSize:
+                                                      DimensionConstant.SIZE_16,
+                                                ),
+                                          ),
+                                    underline: const SizedBox(),
+                                    isExpanded: true,
+                                    onChanged: (String? value) {
+                                      if (value != null) {
+                                        _currentSelectedGenderValue.value =
+                                            value;
+                                      }
+                                    },
                                   );
-                                }).toList(),
-                                hint: _currentSelectedGenderValue.isEmpty
-                                    ? Text(
-                                        StringConstant.EDIT_GENDER_PLACEHOLDER,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                              fontSize:
-                                                  DimensionConstant.SIZE_16,
-                                              color: ColorConstant.C5C5C7,
-                                            ),
-                                      )
-                                    : Text(
-                                        _currentSelectedGenderValue,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                              fontSize:
-                                                  DimensionConstant.SIZE_16,
-                                            ),
-                                      ),
-                                underline: const SizedBox(),
-                                isExpanded: true,
-                                onChanged: (String? value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      _currentSelectedGenderValue = value;
-                                    });
-                                  }
                                 },
                               ),
                             ),

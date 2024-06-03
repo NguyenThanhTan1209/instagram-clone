@@ -81,4 +81,7 @@ class StringConstant {
 
   static const String PRIVATE_INFO_LABEL = 'Private Information';
 
+  static const String REPASSWORD_LABEL = 'Re-Password';
+
+  static const String SIGN_UP_INFO_NOT_VALID_MESSAGE = 'Your registration information is not valid';
 }

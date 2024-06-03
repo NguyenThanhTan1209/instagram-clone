@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import '../../models/user.dart';
 
 abstract class AuthenticationState{}
 
@@ -13,7 +13,7 @@ class AuthenticationInProgress extends AuthenticationState {
 class AuthenticationSuccess extends AuthenticationState {
   AuthenticationSuccess({required this.user});
 
-  final User user;
+  final UserModel user;
 }
 
 class AuthenticationFailed extends AuthenticationState {
