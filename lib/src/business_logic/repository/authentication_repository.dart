@@ -16,7 +16,7 @@ class AuthenticationRepository {
     );
   }
 
-  Future<User?> signUpWithEmailAndPassword({
+  Future<UserModel?> signUpWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
