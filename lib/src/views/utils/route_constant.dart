@@ -11,4 +11,6 @@ class RouteConstant {
   static const String HOME_SCREEN_ROUTE = '/home_screen';
 
   static const String EDIT_PROFILE_SCREEN_ROUTE = '/edit_profile_screen';
+
+  static const String SIGN_UP_SCREEN_ROUTE = '/sign_up_screen';
 }
