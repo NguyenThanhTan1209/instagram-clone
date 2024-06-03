@@ -16,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   int _currentIndex = 0;
   final List<Widget> _screens = <Widget>[
     const HomeFeedScreen(),
@@ -34,17 +35,43 @@ class _HomeScreenState extends State<HomeScreen> {
         iconSize: DimensionConstant.SIZE_27,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        type: BottomNavigationBarType.fixed, 
+        type: BottomNavigationBarType.fixed,
         onTap: (int value) {
           setState(() {
-            _currentIndex=value;
+            _currentIndex = value;
           });
-        }, items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Image.asset(PathConstant.HOME_FEED_ROUNDED_ICON_PATH,), label: 'Home'),
-          BottomNavigationBarItem(icon: Image.asset(PathConstant.EXPLORE_ROUNDED_ICON_PATH,), label: 'Explore'),
-          BottomNavigationBarItem(icon: Image.asset(PathConstant.REELS_ROUNED_ICON_PATH,), label: 'Reels'),
-          BottomNavigationBarItem(icon: Image.asset(PathConstant.NOTIFICATION_ROUNDED_ICON_PATH,), label: 'Notification'),
-          BottomNavigationBarItem(icon: Image.asset(PathConstant.USER_PROFILE_ROUNED_ICON_PATH,), label: 'User'),
+        },
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              PathConstant.HOME_FEED_ROUNDED_ICON_PATH,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              PathConstant.EXPLORE_ROUNDED_ICON_PATH,
+            ),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              PathConstant.REELS_ROUNED_ICON_PATH,
+            ),
+            label: 'Reels',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              PathConstant.NOTIFICATION_ROUNDED_ICON_PATH,
+            ),
+            label: 'Notification',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              PathConstant.USER_PROFILE_ROUNED_ICON_PATH,
+            ),
+            label: 'User',
+          ),
         ],
       ),
     );

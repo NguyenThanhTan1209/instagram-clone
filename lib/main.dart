@@ -5,11 +5,13 @@ import 'package:nested/nested.dart';
 
 import 'firebase_options.dart';
 import 'src/business_logic/blocs/authentication/authentication_bloc.dart';
+import 'src/business_logic/blocs/user/user_bloc.dart';
 import 'src/views/ui/screens/edit_profile_screen.dart';
 import 'src/views/ui/screens/home_screen.dart';
 import 'src/views/ui/screens/log_in_screen.dart';
 import 'src/views/ui/screens/onboarding_screen.dart';
 import 'src/views/ui/screens/sign_in_screen.dart';
+import 'src/views/ui/screens/sign_up_screen.dart';
 import 'src/views/ui/screens/social_log_in_screen.dart';
 import 'src/views/utils/color_constant.dart';
 import 'src/views/utils/route_constant.dart';
@@ -30,6 +32,9 @@ class MainApp extends StatelessWidget {
       providers: <SingleChildWidget>[
         BlocProvider<AuthenticationBloc>(
           create: (BuildContext context) => AuthenticationBloc(),
+        ),
+        BlocProvider<UserBloc>(
+          create: (BuildContext context) => UserBloc(),
         ),
       ],
       child: MaterialApp(
@@ -65,6 +70,8 @@ class MainApp extends StatelessWidget {
               const HomeScreen(),
           RouteConstant.EDIT_PROFILE_SCREEN_ROUTE: (BuildContext context) =>
               const EditProfileScreen(),
+          RouteConstant.SIGN_UP_SCREEN_ROUTE: (BuildContext context) =>
+              const SignUpScreen(),
         },
       ),
     );

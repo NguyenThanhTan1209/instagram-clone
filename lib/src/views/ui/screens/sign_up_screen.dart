@@ -9,35 +9,36 @@ import '../../utils/dimension_constant.dart';
 import '../../utils/path_constant.dart';
 import '../../utils/route_constant.dart';
 import '../../utils/string_constant.dart';
-import '../widgets/horizontal_or_line_widget.dart';
 import '../widgets/sign_in_footer_widget.dart';
 
-class LogInScreen extends StatefulWidget {
-  const LogInScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LogInScreen> createState() => _LogInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LogInScreenState extends State<LogInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   late TextEditingController _userNameController;
   late TextEditingController _passwordController;
+  late TextEditingController _repasswordController;
   late bool _isHidePassword;
-  final String _spacing = ' ';
-  late bool _isValidLoginInfo;
   late bool _isUsernameValid;
   late bool _isPasswordValid;
+  late bool _isRePasswordValid;
 
   @override
   void initState() {
     super.initState();
     _userNameController = TextEditingController();
     _passwordController = TextEditingController();
+    _repasswordController = TextEditingController();
     _isHidePassword = true;
-    _isUsernameValid = _userNameController.text.trim().isNotEmpty &&
-        _userNameController.text.contains(_spacing);
-    _isPasswordValid = _passwordController.text.trim().isNotEmpty;
-    _isValidLoginInfo = false;
+    _isUsernameValid = _userNameController.text.trim().contains('@') &&
+        _userNameController.text.trim().contains('.');
+    _isPasswordValid = _passwordController.text.trim().length >= 6;
+    _isRePasswordValid =
+        _repasswordController.text.trim() == _passwordController.text.trim();
   }
 
   @override
@@ -45,17 +46,53 @@ class _LogInScreenState extends State<LogInScreen> {
     super.dispose();
     _userNameController.dispose();
     _passwordController.dispose();
+    _repasswordController.dispose();
   }
 
-  void _navigateToSocialLogInScreen() {
-    Navigator.of(context).pushNamed(RouteConstant.SOCIAL_LOG_IN_SCREEN_ROUTE);
+  void navigateToSocialLogInScreeen() {
+    Navigator.of(context).pushNamed(RouteConstant.LOG_IN_SCREEN_ROUTE);
   }
 
-  //? temp
-  void _logIn(BuildContext context, String username, String password) {
-    context.read<AuthenticationBloc>().add(
-          SignInWithEmailAndPassword(username: username, password: password),
-        );
+  void checkValid() {
+    _isUsernameValid = _userNameController.text.trim().isNotEmpty &&
+        _userNameController.text.trim().contains('@') &&
+        _userNameController.text.trim().contains('.');
+    _isPasswordValid = _passwordController.text.trim().isNotEmpty &&
+        _passwordController.text.trim().length >= 6;
+    _isRePasswordValid =
+        _repasswordController.text.trim() == _passwordController.text.trim();
+  }
+
+  void onUsernameChanged(String value) {
+    setState(() {
+      checkValid();
+    });
+  }
+
+  void onPasswordChanged(String value) {
+    setState(() {
+      checkValid();
+    });
+  }
+
+  void onRePasswordChanged(String value) {
+    setState(() {
+      checkValid();
+    });
+  }
+
+  void signUpEvent(String username, String password) {
+    if (_isUsernameValid && _isPasswordValid && _isRePasswordValid) {
+      context.read<AuthenticationBloc>().add(
+            SignUpWithEmailAndPassword(username: username, password: password),
+          );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(StringConstant.SIGN_UP_INFO_NOT_VALID_MESSAGE),
+        ),
+      );
+    }
   }
 
   @override
@@ -77,26 +114,20 @@ class _LogInScreenState extends State<LogInScreen> {
                 const SizedBox(
                   height: DimensionConstant.SIZE_12,
                 ),
-                _buildPasswordTextField(context),
-                const SizedBox(height: DimensionConstant.SIZE_19),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: DimensionConstant.SIZE_16,
-                  ),
-                  child: GestureDetector(
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        StringConstant.FORGOT_PASSWORD_LABEL,
-                        style:
-                            Theme.of(context).textTheme.labelMedium!.copyWith(
-                                  color: ColorConstant.FF3797EF,
-                                  fontSize: DimensionConstant.SIZE_12,
-                                ),
-                        textAlign: TextAlign.right,
-                      ),
-                    ),
-                  ),
+                _buildPasswordTextField(
+                  context,
+                  StringConstant.PASSWORD_LABEL,
+                  _passwordController,
+                  onPasswordChanged,
+                ),
+                const SizedBox(
+                  height: DimensionConstant.SIZE_12,
+                ),
+                _buildPasswordTextField(
+                  context,
+                  StringConstant.REPASSWORD_LABEL,
+                  _repasswordController,
+                  onRePasswordChanged,
                 ),
                 const SizedBox(
                   height: DimensionConstant.SIZE_30,
@@ -106,15 +137,12 @@ class _LogInScreenState extends State<LogInScreen> {
                     horizontal: DimensionConstant.SIZE_16,
                   ),
                   child: ElevatedButton(
-                    onPressed: _isValidLoginInfo
-                        ? () {
-                            _logIn(
-                              context,
-                              _userNameController.text,
-                              _passwordController.text,
-                            );
-                          }
-                        : null,
+                    onPressed: () {
+                      signUpEvent(
+                        _userNameController.text.trim(),
+                        _passwordController.text.trim(),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       minimumSize:
                           const Size.fromHeight(DimensionConstant.SIZE_44),
@@ -141,7 +169,7 @@ class _LogInScreenState extends State<LogInScreen> {
                             (Route<dynamic> route) => false,
                           );
                         }
-                        if(state is AuthenticationFailed){
+                        if (state is AuthenticationFailed) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(state.error),
@@ -157,7 +185,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           );
                         }
                         return Text(
-                          StringConstant.LOG_INT_LABEL,
+                          StringConstant.SIGN_UP_LABEL,
                           style:
                               Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     fontSize: DimensionConstant.SIZE_14,
@@ -168,102 +196,39 @@ class _LogInScreenState extends State<LogInScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: DimensionConstant.SIZE_37,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      PathConstant.FACEBOOK_ICON_PATH,
-                      width: DimensionConstant.SIZE_17,
-                      height: DimensionConstant.SIZE_17,
-                    ),
-                    const SizedBox(
-                      width: DimensionConstant.SIZE_10,
-                    ),
-                    Text(
-                      StringConstant.LOG_IN_WITH_FACEBOOK_TITLE,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: ColorConstant.FF3797EF,
-                            fontSize: DimensionConstant.SIZE_14,
-                          ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: DimensionConstant.SIZE_41_POINT_5,
-                ),
-                const HorizontalOrLineWidget(),
-                const SizedBox(
-                  height: DimensionConstant.SIZE_41_POINT_5,
-                ),
-                RichText(
-                  text: TextSpan(
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(fontSize: DimensionConstant.SIZE_14),
-                    children: <InlineSpan>[
-                      TextSpan(
-                        text: StringConstant.DONT_HAVE_AN_ACCOUNT_LABEL,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: ColorConstant.BLACK.withOpacity(
-                                DimensionConstant.SIZE_0_POINT_40,
-                              ),
-                            ),
-                      ),
-                      WidgetSpan(
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: Text(
-                            StringConstant.SIGN_UP_LABEL,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  color: ColorConstant.FF3797EF,
-                                ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
           SignInFooterWidget(
-            label: '',
-            actionLabel: StringConstant.INSTAGRAM_OR_FACEBOOK,
-            actionColor: ColorConstant.BLACK
-                .withOpacity(DimensionConstant.SIZE_0_POINT_40),
-            onPressed: _navigateToSocialLogInScreen,
+            label: StringConstant.ALREADY_HAVE_AN_ACCOUNT_LABEL,
+            actionLabel: StringConstant.SIGN_IN_LABEL,
+            actionColor: ColorConstant.FF262626,
+            onPressed: navigateToSocialLogInScreeen,
           ),
         ],
       ),
     );
   }
 
-  Padding _buildPasswordTextField(BuildContext context) {
+  Padding _buildPasswordTextField(
+    BuildContext context,
+    String label,
+    TextEditingController controller,
+    Function(String)? onChanged,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: DimensionConstant.SIZE_16,
       ),
       child: TextField(
-        onChanged: (String value) {
-          setState(() {
-            _isPasswordValid = value.isNotEmpty;
-            _isValidLoginInfo = _isUsernameValid && _isPasswordValid;
-          });
-        },
+        onChanged: onChanged,
         obscureText: _isHidePassword,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontSize: DimensionConstant.SIZE_14,
               color: ColorConstant.FF262626,
             ),
         cursorColor: ColorConstant.BLACK,
-        controller: _passwordController,
+        controller: controller,
         decoration: InputDecoration(
           prefixIcon: Image.asset(
             PathConstant.PASSWORD_LOCK_ICON_PATH,
@@ -288,7 +253,7 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
           filled: true,
           fillColor: ColorConstant.FAFAFA,
-          hintText: StringConstant.PASSWORD_LABEL,
+          hintText: label,
           hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 color: ColorConstant.C8C8C8,
                 fontSize: DimensionConstant.SIZE_14,
@@ -320,12 +285,7 @@ class _LogInScreenState extends State<LogInScreen> {
       ),
       child: TextField(
         autofocus: true,
-        onChanged: (String value) {
-          setState(() {
-            _isUsernameValid = value.isNotEmpty && !value.contains(_spacing);
-            _isValidLoginInfo = _isUsernameValid && _isPasswordValid;
-          });
-        },
+        onChanged: onUsernameChanged,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontSize: DimensionConstant.SIZE_14,
               color: ColorConstant.FF262626,

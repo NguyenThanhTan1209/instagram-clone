@@ -2,26 +2,30 @@ import 'post.dart';
 import 'story.dart';
 import 'story_album.dart';
 
-class User {
-
-  User({
+class UserModel {
+  UserModel({
     required this.userID,
     required this.userName,
-    required this.password,
-    required this.avatarPath,
     required this.name,
-    required this.postTotal,
-    required this.followerTotal,
-    required this.followingTotal,
-    required this.description,
-    required this.website,
-    required this.posts,
-    required this.storieAlbums,
+    this.gender = '',
+    this.phone = '',
+    this.email = '',
+    this.bio = '',
+    this.password = '',
+    this.avatarPath =
+        'https://i.pinimg.com/originals/a0/4d/84/a04d849cf591c2f980548b982f461401.jpg',
+    this.postTotal = 0,
+    this.followerTotal = 0,
+    this.followingTotal = 0,
+    this.description = '',
+    this.website = '',
+    this.posts = const <Post>[],
+    this.storieAlbums = const <StoryAlbum>[],
   });
 
-  factory User.mockData() {
-    return User(
-      userID: 737669,
+  factory UserModel.mockData() {
+    return UserModel(
+      userID: '737669',
       userName: 'tan_newc',
       password: '123456@#',
       avatarPath:
@@ -243,7 +247,31 @@ class User {
     );
   }
 
-  final int userID;
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      userID: json['userID'] as String,
+      userName: json['userName'] as String,
+      name: json['name'] as String,
+      website: json['website'] as String,
+      bio: json['bio'] as String,
+      email: json['email'] as String,
+      phone: json['phone'] as String,
+      gender: json['gender'] as String,
+    );
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'userID': userID,
+        'userName': userName,
+        'name': name,
+        'website': website,
+        'bio': bio,
+        'email': email,
+        'phone': phone,
+        'gender': gender,
+      };
+
+  final String userID;
   final String userName;
   final String password;
   final String avatarPath;
@@ -253,6 +281,10 @@ class User {
   final int followingTotal;
   final String description;
   final String website;
+  final String bio;
+  final String email;
+  final String phone;
+  final String gender;
   final List<Post> posts;
   final List<StoryAlbum> storieAlbums;
 }
