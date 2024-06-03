@@ -20,6 +20,10 @@ class SignInScreen extends StatelessWidget {
       Navigator.of(context).pushNamed(RouteConstant.LOG_IN_SCREEN_ROUTE);
     }
 
+    void navigateToSignUpScreen(){
+      Navigator.of(context).pushNamed(RouteConstant.SIGN_UP_SCREEN_ROUTE);
+    }
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -70,7 +74,7 @@ class SignInScreen extends StatelessWidget {
                 OutlineSignInButtonWidget(
                   title: StringConstant.SIGN_UP_WITH_PHONE_AND_EMAIL_TITLE,
                   iconPath: '',
-                  onPressed: () {},
+                  onPressed: navigateToSignUpScreen,
                 ),
                 const SizedBox(
                   height: DimensionConstant.SIZE_53,
