@@ -7,4 +7,12 @@ class UserRepository {
   Future<int> createUser(UserModel user) async {
     return _firebaseDatabaseProvider.createUser(user);
   }
+
+  Future<UserModel?> readUserByID(String userID){
+    return _firebaseDatabaseProvider.readUserByID(userID);
+  }
+
+  Future<int> updateUser(UserModel user) async {
+    return _firebaseDatabaseProvider.updateUser(user);
+  }
 }
