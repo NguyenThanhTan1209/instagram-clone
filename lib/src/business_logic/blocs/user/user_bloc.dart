@@ -27,13 +27,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UpdateUserInformation>((UpdateUserInformation event, Emitter<UserState> emit) async {
       emit(UserLoadingState());
       try {
-        final int result = await _userRepository.updateUser(event.updateUser);
+        final int result = await _userRepository.updateUser(event.updateUser, event.avatarPicker);
         if(result == 1){
           emit(UserSuccessState(user: event.updateUser));
         }else{
           emit(UserFailedState(error: 'Update Failed'));
         }
       } catch (e) {
+        log(e.toString());
         emit(UserFailedState(error: 'The update process was interrupted: $e'));
       }
     });

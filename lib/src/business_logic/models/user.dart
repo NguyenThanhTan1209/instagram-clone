@@ -257,6 +257,7 @@ class UserModel {
       email: json['email'] as String,
       phone: json['phone'] as String,
       gender: json['gender'] as String,
+      avatarPath:  json['avatarPath'] as String,
     );
   }
 
@@ -269,22 +270,23 @@ class UserModel {
         'email': email,
         'phone': phone,
         'gender': gender,
+        'avatarPath' : avatarPath
       };
 
-  final String userID;
-  final String userName;
-  final String password;
-  final String avatarPath;
-  final String name;
-  final int postTotal;
-  final int followerTotal;
-  final int followingTotal;
-  final String description;
-  final String website;
-  final String bio;
-  final String email;
-  final String phone;
-  final String gender;
-  final List<Post> posts;
-  final List<StoryAlbum> storieAlbums;
+  String userID;
+  String userName;
+  String password;
+  String avatarPath;
+  String name;
+  int postTotal;
+  int followerTotal;
+  int followingTotal;
+  String description;
+  String website;
+  String bio;
+  String email;
+  String phone;
+  String gender;
+  List<Post> posts;
+  List<StoryAlbum> storieAlbums;
 }
