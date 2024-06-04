@@ -1,11 +1,17 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
+import '../../views/utils/path_constant.dart';
 import '../models/user.dart';
 
 class FirebaseDatabaseProvider {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  late UploadTask? _avatarUploadTask;
 
   Future<int> createUser(UserModel userModel) async {
     final DocumentReference<Map<String, dynamic>> userDoc =
@@ -49,7 +55,20 @@ class FirebaseDatabaseProvider {
     );
   }
 
-  Future<int> updateUser(UserModel user) async {
+  Future<int> updateUser(UserModel user, PlatformFile? avatarFile) async {
+    if (avatarFile != null) {
+      final String avatarPath =
+          '${PathConstant.FIREBASE_USER_STORAGE_PATH}/${user.userID}/avatar/${DateTime.now().millisecondsSinceEpoch}/${avatarFile.name}';
+      final File file = File(avatarFile.path!);
+
+      final Reference ref = _storage.ref().child(avatarPath);
+      _avatarUploadTask = ref.putFile(file);
+
+      await _avatarUploadTask!.whenComplete(() async {
+        user.avatarPath = await _avatarUploadTask!.snapshot.ref.getDownloadURL();
+      });
+    }
+
     final DocumentReference<Map<String, dynamic>> userDoc =
         _database.collection('users').doc(user.userID);
 

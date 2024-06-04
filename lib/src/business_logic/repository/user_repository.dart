@@ -1,3 +1,5 @@
+import 'package:file_picker/file_picker.dart';
+
 import '../models/user.dart';
 import '../services/firebase_database_provider.dart';
 
@@ -12,7 +14,7 @@ class UserRepository {
     return _firebaseDatabaseProvider.readUserByID(userID);
   }
 
-  Future<int> updateUser(UserModel user) async {
-    return _firebaseDatabaseProvider.updateUser(user);
+  Future<int> updateUser(UserModel user, PlatformFile? avatarFile) async {
+    return _firebaseDatabaseProvider.updateUser(user, avatarFile);
   }
 }

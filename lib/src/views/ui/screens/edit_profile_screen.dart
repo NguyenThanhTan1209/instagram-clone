@@ -1,6 +1,7 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,6 +39,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late bool _isUsernameEditValid;
   late bool _isWebsiteEditValid;
   late bool _isGenderEditValid;
+  PlatformFile? _avatarPicker;
 
   @override
   void initState() {
@@ -122,8 +124,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     } else {
       context
           .read<UserBloc>()
-          .add(UpdateUserInformation(updateUser: updateUser));
+          .add(UpdateUserInformation(updateUser: updateUser, avatarPicker: _avatarPicker));
     }
+  }
+
+  Future<void> _openFilePicker() async {
+    final FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result == null) {
+      return;
+    }
+    setState(() {
+      _avatarPicker = result.files.first;
+    });
   }
 
   @override
@@ -216,12 +228,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   children: <Widget>[
                     CircleAvatar(
                       radius: DimensionConstant.SIZE_95,
-                      foregroundImage: NetworkImage(userProfile.avatarPath),
+                      backgroundImage: _avatarPicker != null
+                          ? Image.file(
+                              File(_avatarPicker!.path!),
+                            ).image
+                          : NetworkImage(userProfile.avatarPath,),
                     ),
                     const SizedBox(
                       height: DimensionConstant.SIZE_12_POINT_5,
                     ),
                     InkWell(
+                      onTap: _openFilePicker,
                       child: Text(
                         StringConstant.CHANGE_PROFILE_PHOTO_LABEL,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
