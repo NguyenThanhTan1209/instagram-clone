@@ -23,4 +23,5 @@ class PathConstant {
   static const String GRID_UNSELECT_ICON_PATH = 'assets/icons/grid_unselect.png';
   static const String MENTION_SELECT_ICON_PATH = 'assets/icons/mention_select.png';
   static const String MENTION_UNSELECT_ICON_PATH = 'assets/icons/mention_unselect.png';
+  static const String FIREBASE_USER_STORAGE_PATH = '/user_storage';
 }
