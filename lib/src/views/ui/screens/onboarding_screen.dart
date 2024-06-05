@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:steps_indicator/steps_indicator.dart';
-
-import '../../../business_logic/blocs/onboarding/onboarding_bloc.dart';
-import '../../../business_logic/blocs/onboarding/onboarding_event.dart';
 import '../../../business_logic/models/onboarding_content.dart';
 import '../../utils/color_constant.dart';
 import '../../utils/dimension_constant.dart';
