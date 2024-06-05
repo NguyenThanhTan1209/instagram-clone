@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nested/nested.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 import 'src/business_logic/blocs/authentication/authentication_bloc.dart';
@@ -20,11 +21,22 @@ import 'src/views/utils/string_constant.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MainApp());
+  String initialRoute;
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final bool? skipOnboarding = prefs.getBool('skipOnboarding');
+  if(skipOnboarding!=null && skipOnboarding){
+    initialRoute = RouteConstant.SIGN_IN_SCREEN_ROUTE;
+  }else{
+    initialRoute = RouteConstant.ONBOARDING_SCREEN_ROUTE;
+  }
+
+  runApp(MainApp(initialRoute: initialRoute,));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  const MainApp({super.key, required this.initialRoute});
+
+  final String initialRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +68,7 @@ class MainApp extends StatelessWidget {
           ),
           scaffoldBackgroundColor: ColorConstant.WHITE,
         ),
-        initialRoute: RouteConstant.ONBOARDING_SCREEN_ROUTE,
+        initialRoute: initialRoute,
         routes: <String, WidgetBuilder>{
           RouteConstant.ONBOARDING_SCREEN_ROUTE: (BuildContext context) =>
               const OnboardingScreen(),

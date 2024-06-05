@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:steps_indicator/steps_indicator.dart';
-
 import '../../../business_logic/models/onboarding_content.dart';
 import '../../utils/color_constant.dart';
 import '../../utils/dimension_constant.dart';
@@ -47,7 +47,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     });
   }
 
-  void _navigateSignInScreen() {
+  Future<void> _navigateSignInScreen() async {
+    final SharedPreferences ref =await SharedPreferences.getInstance();
+    ref.setBool('skipOnboarding', true);
     Navigator.of(context).popAndPushNamed(RouteConstant.SIGN_IN_SCREEN_ROUTE);
   }
 
