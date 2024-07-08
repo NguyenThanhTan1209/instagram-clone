@@ -24,6 +24,11 @@ dependencies:
   awesome_snackbar_content: ^0.1.3
   file_picker: ^8.0.0+1
   shared_preferences: ^2.2.3
+  photo_manager: ^3.1.1
+  photo_manager_image_provider: ^2.1.1
+  camera: ^0.11.0+1
+  image: ^4.2.0
+  video_player: ^2.8.7
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +86,9 @@ flutter:
     - assets/icons/grid_unselect.png
     - assets/icons/mention_select.png
     - assets/icons/mention_unselect.png
+    - assets/icons/flash_icon.png
+    - assets/icons/no_flash_icon.png
+    - assets/icons/swap_camera_icon.png
   fonts:
     - family: SF Pro
       fonts:
