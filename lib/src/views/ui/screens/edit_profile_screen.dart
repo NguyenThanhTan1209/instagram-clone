@@ -40,6 +40,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late bool _isWebsiteEditValid;
   late bool _isGenderEditValid;
   PlatformFile? _avatarPicker;
+  UserModel? userProfile;
+
+  final Map<String, String> _inputValues = <String, String>{
+    'userID': '',
+    'userName': '',
+    'name': '',
+    'website': '',
+    'bio': '',
+    'email': '',
+    'phone': '',
+    'gender': '',
+  };
 
   @override
   void initState() {
@@ -95,7 +107,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void _updateUserProfile(UserModel updateUser) {
+  void _updateUserProfile(Map<String, String> inputValues) {
     _checkValidInformation();
     if (!_isNameEditValid) {
       _showSnackBar(
@@ -122,9 +134,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         contentType: ContentType.failure,
       );
     } else {
-      context
-          .read<UserBloc>()
-          .add(UpdateUserInformation(updateUser: updateUser, avatarPicker: _avatarPicker));
+      final UserModel updateUser = UserModel.instance;
+      updateUser.userID = inputValues['userId']!;
+      updateUser.userName = inputValues['userName']!;
+      updateUser.name = inputValues['name']!;
+      updateUser.website = inputValues['website']!;
+      updateUser.bio = inputValues['bio']!;
+      updateUser.email = inputValues['email']!;
+      updateUser.phone = inputValues['phone']!;
+      updateUser.gender = inputValues['gender']!;
+      context.read<UserBloc>().add(
+            UpdateUserInformation(
+              updateUser: updateUser,
+              avatarPicker: _avatarPicker,
+            ),
+          );
     }
   }
 
@@ -140,16 +164,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final UserModel userProfile =
-        ModalRoute.of(context)!.settings.arguments! as UserModel;
+    userProfile = ModalRoute.of(context)!.settings.arguments! as UserModel;
 
-    _nameController.text = userProfile.name;
-    _usernameController.text = userProfile.userName;
-    _websiteController.text = userProfile.website;
-    _bioController.text = userProfile.bio;
-    _emailController.text = userProfile.email;
-    _phoneController.text = userProfile.phone;
-    _currentSelectedGenderValue.value = userProfile.gender;
+    _nameController.text = userProfile!.name;
+    _usernameController.text = userProfile!.userName;
+    _websiteController.text = userProfile!.website;
+    _bioController.text = userProfile!.bio;
+    _emailController.text = userProfile!.email;
+    _phoneController.text = userProfile!.phone;
+    _currentSelectedGenderValue.value = userProfile!.gender;
 
     return Scaffold(
       appBar: AppBar(
@@ -175,18 +198,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         actions: <Widget>[
           InkWell(
             onTap: () {
-              _updateUserProfile(
-                UserModel(
-                  userID: userProfile.userID,
-                  userName: _usernameController.text.trim(),
-                  name: _nameController.text.trim(),
-                  website: _websiteController.text.trim(),
-                  bio: _bioController.text.trim(),
-                  email: userProfile.email,
-                  phone: _phoneController.text.trim(),
-                  gender: _currentSelectedGenderValue.value.trim(),
-                ),
-              );
+              _updateUserProfile(_inputValues);
             },
             child: Text(
               StringConstant.COMPLETE_LABEL,
@@ -232,7 +244,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ? Image.file(
                               File(_avatarPicker!.path!),
                             ).image
-                          : NetworkImage(userProfile.avatarPath,),
+                          : NetworkImage(
+                              userProfile!.avatarPath,
+                            ),
                     ),
                     const SizedBox(
                       height: DimensionConstant.SIZE_12_POINT_5,

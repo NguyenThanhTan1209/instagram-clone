@@ -44,6 +44,10 @@ class _UserProfileScreenState extends State<UserProfileScreen>
     );
   }
 
+  void _navigateToAddPostScreen() {
+    Navigator.of(context).pushNamed(RouteConstant.ADD_POST_SCREEN_ROUTE);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,10 +111,13 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Image.asset(
-                                    PathConstant.ADD_MEDIUM_BUTTON_ICON_PATH,
-                                    width: DimensionConstant.SIZE_18,
-                                    height: DimensionConstant.SIZE_18,
+                                  InkWell(
+                                    onTap: _navigateToAddPostScreen,
+                                    child: Image.asset(
+                                      PathConstant.ADD_MEDIUM_BUTTON_ICON_PATH,
+                                      width: DimensionConstant.SIZE_18,
+                                      height: DimensionConstant.SIZE_18,
+                                    ),
                                   ),
                                   const SizedBox(
                                     width: DimensionConstant.SIZE_17_POINT_5,
@@ -391,7 +398,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                             children: state.user.posts
                                 .map(
                                   (Post e) => CachedNetworkImage(
-                                    imageUrl: e.imagesPath.first,
+                                    imageUrl: e.images.first,
                                     fit: BoxFit.cover,
                                     placeholder:
                                         (BuildContext context, String url) =>
