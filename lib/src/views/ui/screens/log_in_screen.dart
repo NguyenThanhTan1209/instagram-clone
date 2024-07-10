@@ -61,10 +61,19 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Column(
+      appBar: AppBar(
+        backgroundColor: ColorConstant.WHITE,
+        leading: GestureDetector(
+          onTap: _navigateBack,
+          child:
+              const Icon(Icons.chevron_left_sharp, color: ColorConstant.BLACK),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: DimensionConstant.SIZE_78),
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Image.asset(
@@ -141,7 +150,7 @@ class _LogInScreenState extends State<LogInScreen> {
                             (Route<dynamic> route) => false,
                           );
                         }
-                        if(state is AuthenticationFailed){
+                        if (state is AuthenticationFailed) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(state.error),
@@ -232,15 +241,15 @@ class _LogInScreenState extends State<LogInScreen> {
                 ),
               ],
             ),
-          ),
-          SignInFooterWidget(
-            label: '',
-            actionLabel: StringConstant.INSTAGRAM_OR_FACEBOOK,
-            actionColor: ColorConstant.BLACK
-                .withOpacity(DimensionConstant.SIZE_0_POINT_40),
-            onPressed: _navigateToSocialLogInScreen,
-          ),
-        ],
+            SignInFooterWidget(
+              label: '',
+              actionLabel: StringConstant.INSTAGRAM_OR_FACEBOOK,
+              actionColor: ColorConstant.BLACK
+                  .withOpacity(DimensionConstant.SIZE_0_POINT_40),
+              onPressed: _navigateToSocialLogInScreen,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -373,5 +382,9 @@ class _LogInScreenState extends State<LogInScreen> {
         ),
       ),
     );
+  }
+
+  void _navigateBack() {
+    Navigator.of(context).pop();
   }
 }
