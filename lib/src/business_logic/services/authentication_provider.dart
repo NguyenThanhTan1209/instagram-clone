@@ -25,11 +25,11 @@ class AuthenticationProvider {
       );
       final User? user = credential.user;
       if (user != null) {
-        return UserModel(
-          userID: user.uid,
-          userName: user.email ?? '',
-          name: user.displayName ?? '',
-        );
+        final UserModel signInUser = UserModel.instance;
+        signInUser.userID =user.uid;
+        signInUser.userName = user.email ?? '';
+        signInUser.password = user.displayName ?? '';
+        return signInUser;
       }
     } catch (e) {
       log(e.toString());
@@ -49,12 +49,12 @@ class AuthenticationProvider {
       );
       final User? user = userCredential.user;
       if (user != null) {
-        final UserModel newUser = UserModel(
-          userID: user.uid,
-          userName: user.email!.split('@').first,
-          email: user.email ?? '',
-          name: user.displayName ?? 'New Account',
-        );
+        final UserModel newUser = UserModel.instance;
+        newUser.userID = user.uid;
+        newUser.userName = user.email!.split('@').first;
+        newUser.email = user.email??'';
+        newUser.name = user.displayName ?? 'New Account';
+        
         final int result = await _databaseProvider.createUser(newUser);
         if (result == 1) {
           return newUser;
