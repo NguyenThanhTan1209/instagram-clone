@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ColorConstant {
   static const Color WHITE = Colors.white;
   static const Color BLACK = Colors.black;
+  static const Color RED = Colors.red;
 
   static const Color BC4E9C = Color(0xFFBC4E9C);
 
@@ -37,5 +38,11 @@ class ColorConstant {
   static const Color FF3897F0 = Color(0xFF3897F0);
 
   static const Color C5C5C7 = Color(0xFFC5C5C7);
+
+  static const Color FF969696 = Color(0xFF969696);
+
+  static const Color CCCCCC = Color(0xFFCCCCCC);
+
+  static const Color EEEEEE = Color(0xFFEEEEEE);
 
 }

@@ -84,4 +84,22 @@ class StringConstant {
   static const String REPASSWORD_LABEL = 'Re-Password';
 
   static const String SIGN_UP_INFO_NOT_VALID_MESSAGE = 'Your registration information is not valid';
+
+  static const String NEW_POST_LABEL = 'New post';
+
+  static const String LIBRARY_LABEL = 'Library';
+  
+  static const String PHOTO_LABEL = 'Photo';
+  
+  static const String VIDEO_LABEL = 'Video';
+
+  static const String SHARE_LABEL = 'Share';
+
+  static const String TAG_PEOPLE_LABEL = 'Tag People';
+
+  static const String ADD_LOCATION_LABEL = 'Add Location';
+
+  static const String FACEBOOK_LABEL = 'Facebook';
+  static const String TWITTER_LABEL = 'Twitter';
+  static const String TUMBLUR_LABEL = 'Tumblur';
 }
