@@ -14,6 +14,7 @@ import '../../utils/dimension_constant.dart';
 import '../../utils/path_constant.dart';
 import '../../utils/route_constant.dart';
 import '../../utils/string_constant.dart';
+import '../widgets/drawer_list_item_widget.dart';
 import '../widgets/profile_infomation_column_widget.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -27,6 +28,44 @@ class _UserProfileScreenState extends State<UserProfileScreen>
     with SingleTickerProviderStateMixin {
   final int profileContentLength = 2;
   late final TabController tabController;
+  final List<Map<String, String>> iconPathDatas = <Map<String, String>>[
+    <String, String>{
+      'title': 'Archive',
+      'iconPath': PathConstant.ARCHIVE_ICON_PATH,
+    },
+    <String, String>{
+      'title': 'Your Activity',
+      'iconPath': PathConstant.ACTIVITY_ICON_PATH,
+    },
+    <String, String>{
+      'title': 'Nametag',
+      'iconPath': PathConstant.NAMETAG_ICON_PATH,
+    },
+    <String, String>{
+      'title': 'Saved',
+      'iconPath': PathConstant.SAVED_POST_ICON_PATH,
+    },
+    <String, String>{
+      'title': 'Close Friends',
+      'iconPath': PathConstant.CLOSE_FRIEND_LIST_ICON_PATH,
+    },
+    <String, String>{
+      'title': 'Discover People',
+      'iconPath': PathConstant.DISCOVER_PEOPLE_ICON_PATH,
+    },
+    <String, String>{
+      'title': 'Open Facebook',
+      'iconPath': PathConstant.OPEN_FACEBOOK_ICON_PATH,
+    },
+    <String, String>{
+      'title': 'Covid-19 Information Center',
+      'iconPath': PathConstant.COVID_CENTER_ICON_PATH,
+    },
+  ];
+  final Map<String, String> settingItem = <String, String>{
+    'title': 'Setting',
+    'iconPath': PathConstant.SETTING_ICON_PATH,
+  };
 
   @override
   void initState() {
@@ -51,6 +90,28 @@ class _UserProfileScreenState extends State<UserProfileScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: Drawer(
+        shape: const RoundedRectangleBorder(),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  return DrawerListItem(
+                    title: iconPathDatas[index]['title']!,
+                    iconPath: iconPathDatas[index]['iconPath']!,
+                  );
+                },
+                itemCount: iconPathDatas.length,
+              ),
+            ),
+            DrawerListItem(
+              title: settingItem['title'] ?? '',
+              iconPath: settingItem['iconPath'] ?? '',
+            ),
+          ],
+        ),
+      ),
       backgroundColor: ColorConstant.FAFAFA,
       body: DefaultTabController(
         length: 2,
@@ -122,12 +183,10 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                   const SizedBox(
                                     width: DimensionConstant.SIZE_17_POINT_5,
                                   ),
-                                  Image.asset(
-                                    PathConstant.SIDE_MENU_ICON_PATH,
-                                    width: DimensionConstant.SIZE_17_POINT_5,
-                                    height: DimensionConstant.SIZE_20_POINT_5,
-                                  ),
                                 ],
+                              ),
+                              const SizedBox(
+                                width: DimensionConstant.SIZE_17_POINT_5,
                               ),
                             ],
                           ),
@@ -342,8 +401,12 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                             ),
                                             child: CircleAvatar(
                                               backgroundImage: NetworkImage(
-                                                state.user.storieAlbums[index]
-                                                    .stories.first.storyImagePath,
+                                                state
+                                                    .user
+                                                    .storieAlbums[index]
+                                                    .stories
+                                                    .first
+                                                    .storyImagePath,
                                               ),
                                             ),
                                           ),
