@@ -28,4 +28,13 @@ class PathConstant {
   static const String FLASH_ICON_PATH = 'assets/icons/flash_icon.png';
   static const String NO_FLASH_ICON_PATH = 'assets/icons/no_flash_icon.png';
   static const String SWAP_CAMERA_ICON_PATH = 'assets/icons/swap_camera_icon.png';
+  static const String ARCHIVE_ICON_PATH = 'assets/icons/archive_icon.png';
+  static const String ACTIVITY_ICON_PATH = 'assets/icons/activity_icon.png';
+  static const String CLOSE_FRIEND_LIST_ICON_PATH = 'assets/icons/close_friend_list_icon.png';
+  static const String COVID_CENTER_ICON_PATH = 'assets/icons/covid_center_icon.png';
+  static const String DISCOVER_PEOPLE_ICON_PATH = 'assets/icons/discover_people_icon.png';
+  static const String NAMETAG_ICON_PATH = 'assets/icons/nametag_icon.png';
+  static const String OPEN_FACEBOOK_ICON_PATH = 'assets/icons/open_facebook_icon.png';
+  static const String SAVED_POST_ICON_PATH = 'assets/icons/saved_post_icon.png';
+  static const String SETTING_ICON_PATH = 'assets/icons/setting_icon.png';
 }

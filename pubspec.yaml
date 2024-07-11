@@ -89,6 +89,15 @@ flutter:
     - assets/icons/flash_icon.png
     - assets/icons/no_flash_icon.png
     - assets/icons/swap_camera_icon.png
+    - assets/icons/archive_icon.png
+    - assets/icons/activity_icon.png
+    - assets/icons/close_friend_list_icon.png
+    - assets/icons/covid_center_icon.png
+    - assets/icons/discover_people_icon.png
+    - assets/icons/nametag_icon.png
+    - assets/icons/open_facebook_icon.png
+    - assets/icons/saved_post_icon.png
+    - assets/icons/setting_icon.png
   fonts:
     - family: SF Pro
       fonts:

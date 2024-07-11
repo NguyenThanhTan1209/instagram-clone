@@ -63,6 +63,7 @@ class MainApp extends StatelessWidget {
           textTheme: const TextTheme(
             bodyMedium: TextStyle(
               fontFamily: StringConstant.mainFontName,
+              color: ColorConstant.FF262626,
             ),
             titleSmall: TextStyle(
               fontFamily: StringConstant.mainFontName,
