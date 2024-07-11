@@ -168,4 +168,6 @@ class DimensionConstant {
   static const double SIZE_375 = 375.0;
 
   static const double SIZE_100 = 100.0;
+
+  static const double SIZE_23_POINT_5 = 23.5;
 }
