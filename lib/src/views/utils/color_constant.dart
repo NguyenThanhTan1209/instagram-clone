@@ -45,4 +45,14 @@ class ColorConstant {
 
   static const Color EEEEEE = Color(0xFFEEEEEE);
 
+  static const Color FBAA47 = Color(0xFFFBAA47);
+
+  static const Color D91A46 = Color(0xFFD91A46);
+
+  static const Color A60F93 = Color(0xFFA60F93);
+
+  static const Color FF121212 = Color(0xFF121212);
+
+  static const Color FF999999 = Color(0xFF999999);
+
 }
