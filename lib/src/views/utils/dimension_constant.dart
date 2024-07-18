@@ -170,4 +170,22 @@ class DimensionConstant {
   static const double SIZE_100 = 100.0;
 
   static const double SIZE_23_POINT_5 = 23.5;
+
+  static const double SIZE_105 = 105.0;
+
+  static const double SIZE_22 = 22.0;
+
+  static const double SIZE_98 = 98.0;
+
+  static const double SIZE_62 = 62.0;
+
+  static const double SIZE_106 = 106.0;
+
+  static const double SIZE_11 = 11.0;
+
+  static const double SIZE_32 = 32.0;
+
+  static const double SIZE_0_POINT_7 = 0.7;
+
+  static const double SIZE_0_POINT_15 = 0.15;
 }
