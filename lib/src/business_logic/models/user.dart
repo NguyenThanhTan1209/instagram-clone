@@ -22,9 +22,7 @@ class UserModel {
   static UserModel? _INSTANCE;
 
   static UserModel get instance {
-    if(_INSTANCE==null){
-      _INSTANCE = UserModel._();
-    }
+    _INSTANCE ??= UserModel._();
     return _INSTANCE!;
   }
 
