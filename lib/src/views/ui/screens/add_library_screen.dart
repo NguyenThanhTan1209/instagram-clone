@@ -78,7 +78,7 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
               child: Text(
                 StringConstant.CANCEL_LABEL,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontSize: DimensionConstant.SIZE_16,
+                      fontSize: DimensionConstant.SIZE_15,
                     ),
               ),
             ),

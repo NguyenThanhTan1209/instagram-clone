@@ -15,6 +15,7 @@ class FirebaseDatabaseProvider {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   late UploadTask? _avatarUploadTask;
 
+  // User Handle
   Future<int> createUser(UserModel userModel) async {
     final DocumentReference<Map<String, dynamic>> userDoc =
         _database.collection('users').doc(userModel.userID);
@@ -56,26 +57,27 @@ class FirebaseDatabaseProvider {
     );
   }
 
-  Future<int> updateUser(UserModel user, PlatformFile? avatarFile) async {
+  Future<int> updateUser(Map<String,String> updatedData, PlatformFile? avatarFile) async {
     if (avatarFile != null) {
       final String avatarPath =
-          '${PathConstant.FIREBASE_USER_STORAGE_PATH}/${user.userID}/avatar/${DateTime.now().millisecondsSinceEpoch}/${avatarFile.name}';
+          '${PathConstant.FIREBASE_USER_STORAGE_PATH}/${updatedData['userID']}/avatar/${DateTime.now().millisecondsSinceEpoch}/${avatarFile.name}';
       final File file = File(avatarFile.path!);
 
       final Reference ref = _storage.ref().child(avatarPath);
       _avatarUploadTask = ref.putFile(file);
 
       await _avatarUploadTask!.whenComplete(() async {
-        user.avatarPath =
+        updatedData['avatarPath'] =
             await _avatarUploadTask!.snapshot.ref.getDownloadURL();
       });
     }
 
     final DocumentReference<Map<String, dynamic>> userDoc =
-        _database.collection('users').doc(user.userID);
+        _database.collection('users').doc(updatedData['userID']);
 
     try {
-      await userDoc.update(user.toJson());
+      await userDoc.update(updatedData);
+      UserModel.fromJson(updatedData);
       return 1;
     } catch (e) {
       log(e.toString());
@@ -83,20 +85,19 @@ class FirebaseDatabaseProvider {
     }
   }
 
+  //Handle Post
   Future<int> createPost(Post post) async {
     final File file = File(post.images.first);
     final String postPath =
         '${PathConstant.FIREBASE_POST_STORAGE_PATH}/${post.userID}/${post.postID}/${DateTime.now().millisecondsSinceEpoch}/${post.images.first.split("/").last}';
-    
 
-      final Reference ref = _storage.ref().child(postPath);
-      _avatarUploadTask = ref.putFile(file);
+    final Reference ref = _storage.ref().child(postPath);
+    _avatarUploadTask = ref.putFile(file);
 
-      await _avatarUploadTask!.whenComplete(() async {
-        post.images.first =
-            await _avatarUploadTask!.snapshot.ref.getDownloadURL();
-      });
-
+    await _avatarUploadTask!.whenComplete(() async {
+      post.images.first =
+          await _avatarUploadTask!.snapshot.ref.getDownloadURL();
+    });
 
     final DocumentReference<Map<String, dynamic>> postDoc =
         _database.collection('posts').doc(post.postID);
@@ -105,8 +106,13 @@ class FirebaseDatabaseProvider {
       postID: const Uuid().v1(),
       userID: post.userID,
       userName: post.userName,
+      avatarPath: post.avatarPath,
       images: post.images,
       content: post.content,
+      likedUsers: post.likedUsers,
+      comments: post.comments,
+      location: post.location,
+      createdDate: post.createdDate,
     );
 
     final Map<String, dynamic> json = createPost.toJson();
@@ -117,6 +123,21 @@ class FirebaseDatabaseProvider {
     } on Exception catch (e) {
       log(e.toString());
       return 0;
+    }
+  }
+
+  Future<List<Post>> readPostList() async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> postDoc =
+          await _database.collection('posts').orderBy('createdDate',descending: true).get();
+      final List<Map<String, dynamic>> postList = postDoc.docs
+          .map((QueryDocumentSnapshot<Map<String, dynamic>> e) => e.data())
+          .toList();
+
+      return postList.map((Map<String, dynamic> e) => Post.fromJson(e)).toList();
+    } catch (e) {
+      log(e.toString());
+      return <Post>[];
     }
   }
 }

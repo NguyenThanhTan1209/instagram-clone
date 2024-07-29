@@ -14,7 +14,7 @@ class UserRepository {
     return _firebaseDatabaseProvider.readUserByID(userID);
   }
 
-  Future<int> updateUser(UserModel user, PlatformFile? avatarFile) async {
-    return _firebaseDatabaseProvider.updateUser(user, avatarFile);
+  Future<int> updateUser(Map<String,String> updatedData, PlatformFile? avatarFile) async {
+    return _firebaseDatabaseProvider.updateUser(updatedData, avatarFile);
   }
 }

@@ -19,6 +19,8 @@ class PostMediaWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWith = MediaQuery.sizeOf(context).width;
+
     return Stack(
       children: <Widget>[
         CarouselSlider.builder(
@@ -32,6 +34,8 @@ class PostMediaWidget extends StatelessWidget {
             return Image.network(
               imageUrl,
               fit: BoxFit.cover,
+              width: screenWith,
+              height: screenWith,
             );
           },
           options: CarouselOptions(

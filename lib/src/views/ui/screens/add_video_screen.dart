@@ -104,7 +104,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
               child: Text(
                 StringConstant.CANCEL_LABEL,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontSize: DimensionConstant.SIZE_16,
+                      fontSize: DimensionConstant.SIZE_15,
                     ),
               ),
             ),
