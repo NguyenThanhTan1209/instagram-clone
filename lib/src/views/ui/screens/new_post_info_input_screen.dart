@@ -1,9 +1,10 @@
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:video_player/video_player.dart';
 
@@ -16,6 +17,7 @@ import '../../../business_logic/models/preview_media_argument.dart';
 import '../../../business_logic/models/user.dart';
 import '../../utils/color_constant.dart';
 import '../../utils/dimension_constant.dart';
+import '../../utils/route_constant.dart';
 import '../../utils/string_constant.dart';
 
 class NewPostInfoInputScreen extends StatefulWidget {
@@ -48,11 +50,19 @@ class _NewPostInfoInputScreenState extends State<NewPostInfoInputScreen> {
 
   void _sharePost() {
     final UserModel currentUser = UserModel.instance;
+    final DateFormat dateFormat= DateFormat('dd/MM/yyyy hh:mm');
+    final String createdDate = dateFormat.format(DateTime.now());
+
     final Post post = Post(
       postID: const Uuid().v4(),
       userID: currentUser.userID,
       userName: currentUser.userName,
+      avatarPath: currentUser.avatarPath,
       images: <String>[previewFile!.path],
+      comments: <String>[],
+      likedUsers: <String>[],
+      content: _captionController.text,
+      createdDate: createdDate,
     );
     context.read<PostBloc>().add(CreatePost(post: post));
   }
@@ -130,8 +140,23 @@ class _NewPostInfoInputScreenState extends State<NewPostInfoInputScreen> {
             );
           }
           if(state is PostSuccess){
-            Navigator.of(context).pop();
-            log('Post bài thành công');
+            final SnackBar snackBar = SnackBar(
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              content: AwesomeSnackbarContent(
+                title: 'Success',
+                message: 'Posted successfully',
+                contentType: ContentType.success,
+              ),
+            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(snackBar);
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              RouteConstant.HOME_SCREEN_ROUTE,
+              (Route<dynamic> route) => false,
+            );
           }
         },
         child: SingleChildScrollView(

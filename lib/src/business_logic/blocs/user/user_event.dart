@@ -1,7 +1,5 @@
 import 'package:file_picker/file_picker.dart';
 
-import '../../models/user.dart';
-
 abstract class UserEvent {}
 
 class GetUserByID extends UserEvent {
@@ -13,6 +11,6 @@ class GetUserByID extends UserEvent {
 class UpdateUserInformation extends UserEvent {
   UpdateUserInformation({required this.avatarPicker, required this.updateUser});
 
-  final UserModel updateUser;
+  final Map<String, String> updateUser;
   final PlatformFile? avatarPicker;
 }

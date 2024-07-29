@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'src/business_logic/blocs/authentication/authentication_bloc.dart';
 import 'src/business_logic/blocs/post/post_bloc.dart';
+import 'src/business_logic/blocs/post_list/post_list_bloc.dart';
 import 'src/business_logic/blocs/user/user_bloc.dart';
 import 'src/views/ui/screens/add_post_screen.dart';
 import 'src/views/ui/screens/edit_profile_screen.dart';
@@ -57,6 +58,9 @@ class MainApp extends StatelessWidget {
           create: (BuildContext context) => UserBloc(),
         ),
         BlocProvider<PostBloc>(create: (BuildContext context) => PostBloc()),
+        BlocProvider<PostListBloc>(
+          create: (BuildContext context) => PostListBloc(),
+        ),
       ],
       child: MaterialApp(
         theme: ThemeData(
