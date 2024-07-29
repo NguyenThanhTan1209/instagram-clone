@@ -7,4 +7,8 @@ class PostRepository {
   Future<int> createPost(Post post){
     return _firebaseProvider.createPost(post);
   }
+
+  Future<List<Post>> readPostList(){
+    return _firebaseProvider.readPostList();
+  }
 }
