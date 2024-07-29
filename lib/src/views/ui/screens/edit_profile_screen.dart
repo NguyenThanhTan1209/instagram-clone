@@ -43,7 +43,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   UserModel? userProfile;
 
   final Map<String, String> _inputValues = <String, String>{
-    'userID': '',
+    'userID'
     'userName': '',
     'name': '',
     'website': '',
@@ -107,7 +107,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void _updateUserProfile(Map<String, String> inputValues) {
+  void _updateUserProfile() {
     _checkValidInformation();
     if (!_isNameEditValid) {
       _showSnackBar(
@@ -134,18 +134,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         contentType: ContentType.failure,
       );
     } else {
-      final UserModel updateUser = UserModel.instance;
-      updateUser.userID = inputValues['userId']!;
-      updateUser.userName = inputValues['userName']!;
-      updateUser.name = inputValues['name']!;
-      updateUser.website = inputValues['website']!;
-      updateUser.bio = inputValues['bio']!;
-      updateUser.email = inputValues['email']!;
-      updateUser.phone = inputValues['phone']!;
-      updateUser.gender = inputValues['gender']!;
+      _inputValues['userID'] = UserModel.instance.userID;
+      _inputValues['userName'] = _usernameController.text;
+      _inputValues['name'] = _nameController.text;
+      _inputValues['website'] = _websiteController.text;
+      _inputValues['bio'] = _bioController.text;
+      _inputValues['email'] = _emailController.text;
+      _inputValues['phone'] = _phoneController.text;
+      _inputValues['gender'] = _currentSelectedGenderValue.value;
       context.read<UserBloc>().add(
             UpdateUserInformation(
-              updateUser: updateUser,
+              updateUser: _inputValues,
               avatarPicker: _avatarPicker,
             ),
           );
@@ -198,7 +197,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         actions: <Widget>[
           InkWell(
             onTap: () {
-              _updateUserProfile(_inputValues);
+              _updateUserProfile();
             },
             child: Text(
               StringConstant.COMPLETE_LABEL,

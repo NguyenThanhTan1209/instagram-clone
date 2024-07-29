@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../business_logic/models/post.dart';
 import '../../utils/dimension_constant.dart';
 
 class PostTitleWidget extends StatelessWidget {
   const PostTitleWidget({
-    super.key, required this.username,
+    super.key, required this.post,
   });
 
-  final String username;
+  final Post post;
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +19,12 @@ class PostTitleWidget extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          const SizedBox(
+          SizedBox(
             width: DimensionConstant.SIZE_32,
             height: DimensionConstant.SIZE_32,
             child: CircleAvatar(
               backgroundImage: NetworkImage(
-                'https://thainguyentv.vn/stores/news_dataimages/vanminh/072018/18/10/doi-hinh-cau-thu-tre-xuat-sac-nhat-world-cup-2018-57-.7081.jpg',
+                post.avatarPath,
               ),
             ),
           ),
@@ -34,7 +35,7 @@ class PostTitleWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                username,
+                post.userName,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       fontSize: DimensionConstant.SIZE_13,
                     ),
