@@ -33,6 +33,7 @@ dependencies:
   carousel_slider: ^4.2.1
   smooth_page_indicator: ^1.2.0
   intl: ^0.18.1
+  staggered_grid_view_flutter: ^0.0.4
 
 dev_dependencies:
   flutter_test:
@@ -111,6 +112,7 @@ flutter:
     - assets/icons/save_icon.png
     - assets/icons/saved_icon.png
     - assets/icons/share_icon.png
+    - assets/icons/explore_search_icon.png
   fonts:
     - family: SF Pro
       fonts:
