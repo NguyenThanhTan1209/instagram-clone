@@ -102,4 +102,6 @@ class StringConstant {
   static const String FACEBOOK_LABEL = 'Facebook';
   static const String TWITTER_LABEL = 'Twitter';
   static const String TUMBLUR_LABEL = 'Tumblur';
+
+  static const String SEARCH_LABEL = 'Search';
 }
