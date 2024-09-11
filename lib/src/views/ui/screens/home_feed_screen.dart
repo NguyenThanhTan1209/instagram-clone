@@ -37,6 +37,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
+              floating: true,
               expandedHeight: DimensionConstant.SIZE_44,
               backgroundColor: ColorConstant.WHITE,
               title: Image.asset(
