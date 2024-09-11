@@ -55,4 +55,6 @@ class ColorConstant {
 
   static const Color FF999999 = Color(0xFF999999);
 
+  static const Color FF767680 = Color(0xFF767680);
+
 }
