@@ -2,9 +2,10 @@ import '../models/user.dart';
 import '../services/authentication_provider.dart';
 
 class AuthenticationRepository {
-  final AuthenticationProvider _authenticationProvider = AuthenticationProvider();
+  final AuthenticationProvider _authenticationProvider =
+      AuthenticationProvider();
 
-    Future<UserModel?> signInWithEmailAndPassword({
+  Future<UserModel?> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) {
@@ -22,5 +23,9 @@ class AuthenticationRepository {
       email: email,
       password: password,
     );
+  }
+
+  Future<UserModel?> signInWithFacebook() async {
+    return _authenticationProvider.signInWithFacebook();
   }
 }

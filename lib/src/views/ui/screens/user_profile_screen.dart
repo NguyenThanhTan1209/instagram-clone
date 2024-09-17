@@ -225,8 +225,12 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                       DimensionConstant.SIZE_5,
                                     ),
                                     child: CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(state.user.avatarPath),
+                                      backgroundImage: state
+                                              .user.avatarPath.isNotEmpty
+                                          ? NetworkImage(state.user.avatarPath)
+                                          : const NetworkImage(
+                                              'https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg',
+                                            ),
                                     ),
                                   ),
                                   // const Spacer(),

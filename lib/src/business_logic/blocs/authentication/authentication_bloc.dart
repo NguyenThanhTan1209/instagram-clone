@@ -30,6 +30,23 @@ class AuthenticationBloc
       }
     });
 
+    on<SignInWithFacebook>((
+      SignInWithFacebook event,
+      Emitter<AuthenticationState> emit,
+    ) async {
+      emit(AuthenticationInProgress());
+      try {
+        final UserModel? user = await _repository.signInWithFacebook();
+        if (user != null) {
+          emit(AuthenticationSuccess(user: user));
+        } else {
+          emit(AuthenticationFailed(error: 'Username or Password incorrect'));
+        }
+      } catch (e) {
+        log(e.toString());
+      }
+    });
+
     on<SignUpWithEmailAndPassword>((
       SignUpWithEmailAndPassword event,
       Emitter<AuthenticationState> emit,
@@ -40,7 +57,7 @@ class AuthenticationBloc
           email: event.username,
           password: event.password,
         );
-        if (user!=null) {
+        if (user != null) {
           emit(AuthenticationSuccess(user: user));
         } else {
           emit(AuthenticationFailed(error: 'Sign up failed'));

@@ -15,3 +15,5 @@ class SignInWithEmailAndPassword extends AuthenticationEvent {
   final String username;
   final String password;
 }
+
+class SignInWithFacebook extends AuthenticationEvent {}
