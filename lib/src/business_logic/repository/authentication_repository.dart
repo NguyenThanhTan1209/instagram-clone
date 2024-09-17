@@ -28,4 +28,8 @@ class AuthenticationRepository {
   Future<UserModel?> signInWithFacebook() async {
     return _authenticationProvider.signInWithFacebook();
   }
+
+  Future<UserModel?> signInWithGoogle() async {
+    return _authenticationProvider.signInWithGoogle();
+  }
 }
