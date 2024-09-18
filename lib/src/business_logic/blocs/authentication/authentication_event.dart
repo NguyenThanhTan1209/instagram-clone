@@ -17,3 +17,5 @@ class SignInWithEmailAndPassword extends AuthenticationEvent {
 }
 
 class SignInWithFacebook extends AuthenticationEvent {}
+
+class SignInWithGoogle extends AuthenticationEvent {}

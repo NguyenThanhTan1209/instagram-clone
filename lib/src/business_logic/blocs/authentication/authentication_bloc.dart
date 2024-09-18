@@ -40,7 +40,24 @@ class AuthenticationBloc
         if (user != null) {
           emit(AuthenticationSuccess(user: user));
         } else {
-          emit(AuthenticationFailed(error: 'Username or Password incorrect'));
+          emit(AuthenticationFailed(error: 'Sign in with facebook failed. Try again.'));
+        }
+      } catch (e) {
+        log(e.toString());
+      }
+    });
+
+    on<SignInWithGoogle>((
+      SignInWithGoogle event,
+      Emitter<AuthenticationState> emit,
+    ) async {
+      emit(AuthenticationInProgress());
+      try {
+        final UserModel? user = await _repository.signInWithGoogle();
+        if (user != null) {
+          emit(AuthenticationSuccess(user: user));
+        } else {
+          emit(AuthenticationFailed(error: 'Sign in with google failed. Try again.'));
         }
       } catch (e) {
         log(e.toString());
