@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/user.dart';
 import 'firebase_database_provider.dart';
@@ -85,9 +86,53 @@ class AuthenticationProvider {
           FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
 
       // Once signed in, return the UserCredential
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(facebookAuthCredential);
 
-      log(userCredential.toString()); 
+      log(userCredential.toString());
+      final User? user = userCredential.user;
+      if (user != null) {
+        final UserModel newUser = UserModel.instance;
+        newUser.userID = user.uid;
+        newUser.userName = user.email!.split('@').first;
+        newUser.email = user.email ?? '';
+        newUser.name = user.displayName ?? 'New Account';
+
+        final int result = await _databaseProvider.createUser(newUser);
+        if (result == 1) {
+          return newUser;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  Future<UserModel?> signInWithGoogle() async {
+    try {
+      // Trigger the sign-in flow
+      final GoogleSignInAccount? loginResult = await GoogleSignIn().signIn();
+
+      // Create a credential from the access token
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await loginResult!.authentication;
+
+      final OAuthCredential googleAuthCredential =
+          GoogleAuthProvider.credential(
+        idToken: googleSignInAuthentication.idToken,
+        accessToken: googleSignInAuthentication.accessToken,
+      );
+
+      // Once signed in, return the UserCredential
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(googleAuthCredential);
+
+      log(userCredential.toString());
       final User? user = userCredential.user;
       if (user != null) {
         final UserModel newUser = UserModel.instance;

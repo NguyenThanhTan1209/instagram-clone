@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:1017869787048:android:b2cadbfc32bbbca6a0079d',
     messagingSenderId: '1017869787048',
     projectId: 'instagram-clone-7e660',
+    databaseURL: 'https://instagram-clone-7e660-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'instagram-clone-7e660.appspot.com',
   );
 
@@ -62,7 +63,10 @@ class DefaultFirebaseOptions {
     appId: '1:1017869787048:ios:8270484491d92a84a0079d',
     messagingSenderId: '1017869787048',
     projectId: 'instagram-clone-7e660',
+    databaseURL: 'https://instagram-clone-7e660-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'instagram-clone-7e660.appspot.com',
+    androidClientId: '1017869787048-s1ef2j7jqdppc1utqugv9217q2g870j9.apps.googleusercontent.com',
+    iosClientId: '1017869787048-glpbgsi3h8kshckp29rvkj6bi1pdhp4b.apps.googleusercontent.com',
     iosBundleId: 'com.example.instagramClone',
   );
 
