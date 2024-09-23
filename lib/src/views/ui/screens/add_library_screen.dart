@@ -59,12 +59,6 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
         videoPlayerController: _videoPlayerController!,
         autoPlay: true,
         looping: true,
-        // additionalOptions: (BuildContext context) {
-        //   return <OptionItem>[
-        //     OptionItem(onTap: () {}, iconData: Icons.add, title: 'Option1'),
-        //     OptionItem(onTap: () {}, iconData: Icons.add, title: 'Option1'),
-        //   ];
-        // },
       );
     }
   }
@@ -128,6 +122,8 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double deviceWidth = MediaQuery.sizeOf(context).width;
+
     return Scaffold(
       appBar: AppBar(
         leadingWidth: DimensionConstant.SIZE_70,
@@ -177,7 +173,9 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
         child: _entityChoosed != null
             ? Column(
                 children: <Widget>[
-                  Expanded(
+                  SizedBox(
+                    width: deviceWidth,
+                    height: deviceWidth,
                     child: _entityChoosed!.type == AssetType.video
                         ? AspectRatio(
                             aspectRatio:
@@ -185,17 +183,15 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
                             child: Chewie(controller: _customVideoController!),
                           )
                         : Image(
-                            image: AssetEntityImageProvider(
-                              _entityChoosed!,
-                              isOriginal: false,
-                            ),
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
+                          image: AssetEntityImageProvider(
+                            _entityChoosed!,
                           ),
+                          fit: BoxFit.cover,
+                        ),
                   ),
                   Expanded(
                     child: GridView.count(
+                      padding: const EdgeInsets.symmetric(vertical: DimensionConstant.SIZE_1),
                       mainAxisSpacing: DimensionConstant.SIZE_1,
                       crossAxisSpacing: DimensionConstant.SIZE_1,
                       crossAxisCount: 4,
