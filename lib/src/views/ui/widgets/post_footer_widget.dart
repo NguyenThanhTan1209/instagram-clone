@@ -56,30 +56,31 @@ class PostFooterWidget extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              ValueListenableBuilder<int>(
-                valueListenable: postIndex,
-                builder: (
-                  BuildContext context,
-                  int value,
-                  Widget? child,
-                ) {
-                  return SmoothPageIndicator(
-                    effect: SlideEffect(
-                      dotWidth: DimensionConstant.SIZE_6,
-                      spacing: DimensionConstant.SIZE_4,
-                      dotHeight: DimensionConstant.SIZE_6,
-                      activeDotColor: ColorConstant.FF3897F0,
-                      dotColor: ColorConstant.BLACK.withOpacity(
-                        DimensionConstant.SIZE_0_POINT_15,
+              if (post.images.length > 1)
+                ValueListenableBuilder<int>(
+                  valueListenable: postIndex,
+                  builder: (
+                    BuildContext context,
+                    int value,
+                    Widget? child,
+                  ) {
+                    return SmoothPageIndicator(
+                      effect: SlideEffect(
+                        dotWidth: DimensionConstant.SIZE_6,
+                        spacing: DimensionConstant.SIZE_4,
+                        dotHeight: DimensionConstant.SIZE_6,
+                        activeDotColor: ColorConstant.FF3897F0,
+                        dotColor: ColorConstant.BLACK.withOpacity(
+                          DimensionConstant.SIZE_0_POINT_15,
+                        ),
                       ),
-                    ),
-                    controller: PageController(
-                      initialPage: value - 1,
-                    ),
-                    count: post.images.length,
-                  );
-                },
-              ),
+                      controller: PageController(
+                        initialPage: value - 1,
+                      ),
+                      count: post.images.length,
+                    );
+                  },
+                ),
               const Spacer(),
               Image.asset(
                 PathConstant.SAVE_ICON_PATH,
