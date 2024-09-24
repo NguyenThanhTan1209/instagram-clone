@@ -50,7 +50,7 @@ class _NewPostInfoInputScreenState extends State<NewPostInfoInputScreen> {
 
   void _sharePost() {
     final UserModel currentUser = UserModel.instance;
-    final DateFormat dateFormat= DateFormat('dd/MM/yyyy hh:mm');
+    final DateFormat dateFormat = DateFormat('dd/MM/yyyy hh:mm');
     final String createdDate = dateFormat.format(DateTime.now());
 
     final Post post = Post(
@@ -129,191 +129,197 @@ class _NewPostInfoInputScreenState extends State<NewPostInfoInputScreen> {
           ),
         ],
       ),
-      body: BlocListener<PostBloc, PostState>(
-        listener: (BuildContext context, PostState state) {
-          if (state is PostInProgress) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) => const Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-          if(state is PostSuccess){
-            final SnackBar snackBar = SnackBar(
-              elevation: 0,
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              content: AwesomeSnackbarContent(
-                title: 'Success',
-                message: 'Posted successfully',
-                contentType: ContentType.success,
-              ),
-            );
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(snackBar);
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              RouteConstant.HOME_SCREEN_ROUTE,
-              (Route<dynamic> route) => false,
-            );
-          }
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: ColorConstant.EEEEEE),
-                  ),
+      body: SafeArea(
+        child: BlocListener<PostBloc, PostState>(
+          listener: (BuildContext context, PostState state) {
+            if (state is PostInProgress) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => const Center(
+                  child: CircularProgressIndicator(),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        width: DimensionConstant.SIZE_100,
-                        height: DimensionConstant.SIZE_100,
-                        child: previewFile!.mediaType == MediaType.VIDEO
-                            ? VideoPlayer(_videoPlayerController)
-                            : Image.file(
-                                File(previewFile!.path),
-                                fit: BoxFit.cover,
-                              ),
-                      ),
-                      const SizedBox(
-                        width: DimensionConstant.SIZE_16,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: _captionController,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: DimensionConstant.SIZE_10.toInt(),
-                          decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.zero,
-                            border: InputBorder.none,
-                            hintText: 'Write a caption...',
+              );
+            }
+            if (state is PostSuccess) {
+              final SnackBar snackBar = SnackBar(
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Success',
+                  message: 'Posted successfully',
+                  contentType: ContentType.success,
+                ),
+              );
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(snackBar);
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                RouteConstant.HOME_SCREEN_ROUTE,
+                (Route<dynamic> route) => false,
+              );
+            }
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: ColorConstant.EEEEEE),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          width: DimensionConstant.SIZE_100,
+                          height: DimensionConstant.SIZE_100,
+                          child: previewFile!.mediaType == MediaType.VIDEO
+                              ? AspectRatio(
+                                  aspectRatio:
+                                      _videoPlayerController.value.aspectRatio,
+                                  child: VideoPlayer(_videoPlayerController),
+                                )
+                              : Image.file(
+                                  File(previewFile!.path),
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                        const SizedBox(
+                          width: DimensionConstant.SIZE_16,
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: _captionController,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: DimensionConstant.SIZE_10.toInt(),
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.zero,
+                              border: InputBorder.none,
+                              hintText: 'Write a caption...',
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: ColorConstant.EEEEEE),
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: ColorConstant.EEEEEE),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          StringConstant.TAG_PEOPLE_LABEL,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const Icon(Icons.chevron_right_rounded),
+                      ],
+                    ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        StringConstant.TAG_PEOPLE_LABEL,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const Icon(Icons.chevron_right_rounded),
-                    ],
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: ColorConstant.EEEEEE),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          StringConstant.ADD_LOCATION_LABEL,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const Icon(Icons.chevron_right_rounded),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: ColorConstant.EEEEEE),
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: ColorConstant.EEEEEE),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              StringConstant.FACEBOOK_LABEL,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            CupertinoSwitch(
+                              value: _facebookPostChoice,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _facebookPostChoice = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: DimensionConstant.SIZE_16,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              StringConstant.TWITTER_LABEL,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            CupertinoSwitch(
+                              value: _twitterPostChoice,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _twitterPostChoice = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: DimensionConstant.SIZE_16,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              StringConstant.TUMBLUR_LABEL,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            CupertinoSwitch(
+                              value: _tumblerPostChoice,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _tumblerPostChoice = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        StringConstant.ADD_LOCATION_LABEL,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const Icon(Icons.chevron_right_rounded),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: ColorConstant.EEEEEE),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            StringConstant.FACEBOOK_LABEL,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          CupertinoSwitch(
-                            value: _facebookPostChoice,
-                            onChanged: (bool value) {
-                              setState(() {
-                                _facebookPostChoice = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: DimensionConstant.SIZE_16,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            StringConstant.TWITTER_LABEL,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          CupertinoSwitch(
-                            value: _twitterPostChoice,
-                            onChanged: (bool value) {
-                              setState(() {
-                                _twitterPostChoice = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: DimensionConstant.SIZE_16,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            StringConstant.TUMBLUR_LABEL,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          CupertinoSwitch(
-                            value: _tumblerPostChoice,
-                            onChanged: (bool value) {
-                              setState(() {
-                                _tumblerPostChoice = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
