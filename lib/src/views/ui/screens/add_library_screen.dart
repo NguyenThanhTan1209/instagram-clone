@@ -53,16 +53,6 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
     _customVideoController!.dispose();
   }
 
-  void _initControls() {
-    if (_videoPlayerController!.value.isInitialized) {
-      _customVideoController = ChewieController(
-        videoPlayerController: _videoPlayerController!,
-        autoPlay: true,
-        looping: true,
-      );
-    }
-  }
-
   void _initVideoPlayer(File? videoFile) {
     if (_videoPlayerController != null) {
       _videoPlayerController!.dispose();
@@ -81,7 +71,6 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
         );
         setState(() {});
       });
-    _initControls();
     log(videoFile.path);
   }
 
@@ -110,11 +99,12 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
 
   Future<void> _navigateToNewPostInputScreen() async {
     await _entityChoosed!.file.then((File? choosenFile) {
+      _customVideoController!.pause();
       Navigator.of(context).pushNamed(
         RouteConstant.NEW_POST_INFO_INPUT_SCREEN_ROUTE,
         arguments: PreviewMediaArgument(
           path: choosenFile!.path,
-          mediaType: MediaType.PICTURE,
+          mediaType: choosenFile.path.split('.').last.contains('mp4') ? MediaType.VIDEO : MediaType.PICTURE,
         ),
       );
     });
@@ -204,7 +194,6 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
                               child: Image(
                                 image: AssetEntityImageProvider(
                                   e,
-                                  isOriginal: false,
                                 ),
                                 fit: BoxFit.cover,
                               ),
