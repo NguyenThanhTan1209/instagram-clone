@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../business_logic/blocs/post_list/post_list_bloc.dart';
 import '../../../business_logic/blocs/post_list/post_list_event.dart';
@@ -22,6 +26,7 @@ class HomeFeedScreen extends StatefulWidget {
 }
 
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
+
   @override
   void initState() {
     super.initState();
