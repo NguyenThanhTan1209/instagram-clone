@@ -16,8 +16,10 @@ import 'src/views/ui/screens/log_in_screen.dart';
 import 'src/views/ui/screens/new_post_info_input_screen.dart';
 import 'src/views/ui/screens/onboarding_screen.dart';
 import 'src/views/ui/screens/preview_media_screen.dart';
+import 'src/views/ui/screens/send_otp_screen.dart';
 import 'src/views/ui/screens/sign_in_screen.dart';
 import 'src/views/ui/screens/sign_up_screen.dart';
+import 'src/views/ui/screens/sign_up_with_phone_screen.dart';
 import 'src/views/ui/screens/social_log_in_screen.dart';
 import 'src/views/utils/color_constant.dart';
 import 'src/views/utils/route_constant.dart';
@@ -109,6 +111,10 @@ class MainApp extends StatelessWidget {
               const PreviewMediaScreen(),
           RouteConstant.NEW_POST_INFO_INPUT_SCREEN_ROUTE:
               (BuildContext context) => const NewPostInfoInputScreen(),
+          RouteConstant.SIGN_UP_WITH_PHONE_SCREEN_ROUTE:
+              (BuildContext context) => const SignUpWithPhoneScreen(),
+          RouteConstant.SEND_OTP_SCREEN_ROUTE: (BuildContext context) =>
+              const SendOTPScreen(),
         },
       ),
     );

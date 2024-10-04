@@ -1,3 +1,4 @@
+import '../blocs/authentication/authentication_event.dart';
 import '../models/user.dart';
 import '../services/authentication_provider.dart';
 
@@ -31,5 +32,19 @@ class AuthenticationRepository {
 
   Future<UserModel?> signInWithGoogle() async {
     return _authenticationProvider.signInWithGoogle();
+  }
+
+  Future<String> verifyPhoneNumber({required String phoneNumber}) async {
+    return _authenticationProvider.verifyPhoneNumber(phoneNumber: phoneNumber);
+  }
+
+  Future<UserModel?> signUpWithPhoneNumber({
+    required String verificationId,
+    required String otpCode,
+  }) async {
+    return _authenticationProvider.signUpWithPhoneNumber(
+      verificationId: verificationId,
+      otpCode: otpCode,
+    );
   }
 }
