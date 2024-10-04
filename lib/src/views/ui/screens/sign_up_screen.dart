@@ -9,6 +9,7 @@ import '../../utils/dimension_constant.dart';
 import '../../utils/path_constant.dart';
 import '../../utils/route_constant.dart';
 import '../../utils/string_constant.dart';
+import '../widgets/outline_sign_in_button_widget.dart';
 import '../widgets/sign_in_footer_widget.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -98,119 +99,129 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  PathConstant.INSTA_BLACK_LOGO_PATH,
-                  width: DimensionConstant.SIZE_175,
-                  height: DimensionConstant.SIZE_50,
-                ),
-                const SizedBox(height: DimensionConstant.SIZE_40),
-                _buildUsernameTextField(context),
-                const SizedBox(
-                  height: DimensionConstant.SIZE_12,
-                ),
-                _buildPasswordTextField(
-                  context,
-                  StringConstant.PASSWORD_LABEL,
-                  _passwordController,
-                  onPasswordChanged,
-                ),
-                const SizedBox(
-                  height: DimensionConstant.SIZE_12,
-                ),
-                _buildPasswordTextField(
-                  context,
-                  StringConstant.REPASSWORD_LABEL,
-                  _repasswordController,
-                  onRePasswordChanged,
-                ),
-                const SizedBox(
-                  height: DimensionConstant.SIZE_30,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: DimensionConstant.SIZE_16,
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    PathConstant.INSTA_BLACK_LOGO_PATH,
+                    width: DimensionConstant.SIZE_175,
+                    height: DimensionConstant.SIZE_50,
                   ),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      signUpEvent(
-                        _userNameController.text.trim(),
-                        _passwordController.text.trim(),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize:
-                          const Size.fromHeight(DimensionConstant.SIZE_44),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          DimensionConstant.SIZE_16,
-                        ),
-                      ),
-                      backgroundColor: ColorConstant.FF3797EF,
-                      foregroundColor: ColorConstant.WHITE,
-                      disabledBackgroundColor: ColorConstant.FF3797EF
-                          .withOpacity(DimensionConstant.SIZE_0_POINT_5),
-                      disabledForegroundColor: ColorConstant.WHITE
-                          .withOpacity(DimensionConstant.SIZE_0_POINT_5),
+                  const SizedBox(height: DimensionConstant.SIZE_40),
+                  _buildUsernameTextField(context),
+                  const SizedBox(
+                    height: DimensionConstant.SIZE_12,
+                  ),
+                  _buildPasswordTextField(
+                    context,
+                    StringConstant.PASSWORD_LABEL,
+                    _passwordController,
+                    onPasswordChanged,
+                  ),
+                  const SizedBox(
+                    height: DimensionConstant.SIZE_12,
+                  ),
+                  _buildPasswordTextField(
+                    context,
+                    StringConstant.REPASSWORD_LABEL,
+                    _repasswordController,
+                    onRePasswordChanged,
+                  ),
+                  const SizedBox(
+                    height: DimensionConstant.SIZE_30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: DimensionConstant.SIZE_16,
                     ),
-                    child:
-                        BlocConsumer<AuthenticationBloc, AuthenticationState>(
-                      listener:
-                          (BuildContext context, AuthenticationState state) {
-                        if (state is AuthenticationSuccess) {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                            RouteConstant.HOME_SCREEN_ROUTE,
-                            arguments: state.user,
-                            (Route<dynamic> route) => false,
-                          );
-                        }
-                        if (state is AuthenticationFailed) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.error),
-                            ),
-                          );
-                        }
-                      },
-                      builder:
-                          (BuildContext context, AuthenticationState state) {
-                        if (state is AuthenticationInProgress) {
-                          return const CircularProgressIndicator(
-                            color: ColorConstant.WHITE,
-                          );
-                        }
-                        return Text(
-                          StringConstant.SIGN_UP_LABEL,
-                          style:
-                              Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    fontSize: DimensionConstant.SIZE_14,
-                                    color: ColorConstant.WHITE,
-                                  ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        signUpEvent(
+                          _userNameController.text.trim(),
+                          _passwordController.text.trim(),
                         );
                       },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize:
+                            const Size.fromHeight(DimensionConstant.SIZE_44),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            DimensionConstant.SIZE_16,
+                          ),
+                        ),
+                        backgroundColor: ColorConstant.FF3797EF,
+                        foregroundColor: ColorConstant.WHITE,
+                        disabledBackgroundColor: ColorConstant.FF3797EF
+                            .withOpacity(DimensionConstant.SIZE_0_POINT_5),
+                        disabledForegroundColor: ColorConstant.WHITE
+                            .withOpacity(DimensionConstant.SIZE_0_POINT_5),
+                      ),
+                      child:
+                          BlocConsumer<AuthenticationBloc, AuthenticationState>(
+                        listener:
+                            (BuildContext context, AuthenticationState state) {
+                          if (state is AuthenticationSuccess) {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              RouteConstant.HOME_SCREEN_ROUTE,
+                              arguments: state.user,
+                              (Route<dynamic> route) => false,
+                            );
+                          }
+                          if (state is AuthenticationFailed) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(state.error),
+                              ),
+                            );
+                          }
+                        },
+                        builder:
+                            (BuildContext context, AuthenticationState state) {
+                          if (state is AuthenticationInProgress) {
+                            return const CircularProgressIndicator(
+                              color: ColorConstant.WHITE,
+                            );
+                          }
+                          return Text(
+                            StringConstant.SIGN_UP_LABEL,
+                            style:
+                                Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      fontSize: DimensionConstant.SIZE_14,
+                                      color: ColorConstant.WHITE,
+                                    ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    height: DimensionConstant.SIZE_26,
+                  ),
+                  OutlineSignInButtonWidget(
+                    onPressed: _navigateToSignUpWithPhoneScreen,
+                    title: StringConstant.SIGN_UP_WITH_PHONE_LABEL,
+                    iconPath: '',
+                  ),
+                ],
+              ),
             ),
-          ),
-          SignInFooterWidget(
-            label: StringConstant.ALREADY_HAVE_AN_ACCOUNT_LABEL,
-            actionLabel: StringConstant.SIGN_IN_LABEL,
-            actionColor: ColorConstant.FF262626,
-            onPressed: navigateToSocialLogInScreeen,
-          ),
-        ],
+            SignInFooterWidget(
+              label: StringConstant.ALREADY_HAVE_AN_ACCOUNT_LABEL,
+              actionLabel: StringConstant.SIGN_IN_LABEL,
+              actionColor: ColorConstant.FF262626,
+              onPressed: navigateToSocialLogInScreeen,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Padding _buildPasswordTextField(
+  Widget _buildPasswordTextField(
     BuildContext context,
     String label,
     TextEditingController controller,
@@ -278,7 +289,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Padding _buildUsernameTextField(BuildContext context) {
+  Widget _buildUsernameTextField(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: DimensionConstant.SIZE_16,
@@ -333,5 +344,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
     );
+  }
+
+  void _navigateToSignUpWithPhoneScreen() {
+    Navigator.of(context).pop();
   }
 }
