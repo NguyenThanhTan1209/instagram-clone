@@ -19,4 +19,8 @@ class RouteConstant {
   static const String PREVIEW_PICTURE_SCREEN_ROUTE = '/preview_picture_screen';
 
   static const String NEW_POST_INFO_INPUT_SCREEN_ROUTE = '/new_post_info_input_screen';
+
+  static const String SIGN_UP_WITH_PHONE_SCREEN_ROUTE = '/sign_up_with_phone_screen';
+
+  static const String SEND_OTP_SCREEN_ROUTE = '/send_otp_screen';
 }

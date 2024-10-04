@@ -33,6 +33,10 @@ class StringConstant {
 
   static const String USERNAME_LABEL = 'Username';
 
+  static const String PHONE_NUMBER_LABEL = 'Phone Number';
+
+  static const String OTP_LABEL = 'Input OTP';
+
   static const String PASSWORD_LABEL = 'Password';
 
   static const String INSTAGRAM_OR_FACEBOOK = 'Instagram or Facebook';
@@ -104,4 +108,8 @@ class StringConstant {
   static const String TUMBLUR_LABEL = 'Tumblur';
 
   static const String SEARCH_LABEL = 'Search';
+
+  static const String SIGN_UP_WITH_EMAIL_LABEL = 'Sign up with email';
+
+  static const String SIGN_UP_WITH_PHONE_LABEL = 'Sign up with phone number';
 }

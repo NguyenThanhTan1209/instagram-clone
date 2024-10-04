@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../business_logic/models/post.dart';
 import '../../utils/dimension_constant.dart';
+import '../../utils/path_constant.dart';
 
 class PostTitleWidget extends StatelessWidget {
   const PostTitleWidget({
-    super.key, required this.post,
+    super.key,
+    required this.post,
   });
 
   final Post post;
@@ -23,9 +25,12 @@ class PostTitleWidget extends StatelessWidget {
             width: DimensionConstant.SIZE_32,
             height: DimensionConstant.SIZE_32,
             child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                post.avatarPath,
-              ),
+              backgroundImage: post.avatarPath.isNotEmpty
+                  ? NetworkImage(
+                      post.avatarPath,
+                    )
+                  : const AssetImage(PathConstant.DEFAULT_AVATAR_IMAGE_PATH)
+                      as ImageProvider,
             ),
           ),
           const SizedBox(

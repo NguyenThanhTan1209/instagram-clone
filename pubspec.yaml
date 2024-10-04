@@ -68,6 +68,7 @@ flutter:
     - assets/images/onboarding_image_3.png
     - assets/images/onboarding_image_4.png
     - assets/images/insta_black_logo.png
+    - assets/images/default_avatar_image.jpg
     - assets/icons/facebook_icon.png
     - assets/icons/google_icon.png
     - assets/icons/green_tick_icon.png

@@ -78,4 +78,5 @@ class PathConstant {
   static const String SAVE_ICON_PATH = 'assets/icons/save_icon.png';
   static const String SAVED_ICON_PATH = 'assets/icons/saved_icon.png';
   static const String SHARE_ICON_PATH = 'assets/icons/share_icon.png';
+  static const String DEFAULT_AVATAR_IMAGE_PATH = 'assets/images/default_avatar_image.jpg';
 }

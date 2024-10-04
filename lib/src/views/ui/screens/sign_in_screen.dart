@@ -26,21 +26,13 @@ class SignInScreen extends StatelessWidget {
     }
 
     void navigateToSignUpScreen() {
-      Navigator.of(context).pushNamed(RouteConstant.SIGN_UP_SCREEN_ROUTE);
+      Navigator.of(context).pushNamed(RouteConstant.SIGN_UP_WITH_PHONE_SCREEN_ROUTE);
     }
 
     return Scaffold(
       body: SafeArea(
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (BuildContext context, AuthenticationState state) {
-            if (state is AuthenticationInProgress) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
             if (state is AuthenticationSuccess) {
               Navigator.of(context).pop();
               final SnackBar snackBar = SnackBar(
@@ -99,6 +91,7 @@ class SignInScreen extends StatelessWidget {
                         ),
                         child: Text(
                           StringConstant.SIGN_IN_INTRODUCE_LABEL,
+                          textAlign: TextAlign.center,
                           style: GoogleFonts.montserrat(
                             color: ColorConstant.FF8E8E93,
                             fontSize: DimensionConstant.SIZE_14,
