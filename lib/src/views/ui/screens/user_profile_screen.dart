@@ -228,9 +228,9 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                       backgroundImage: state
                                               .user.avatarPath.isNotEmpty
                                           ? NetworkImage(state.user.avatarPath)
-                                          : const NetworkImage(
-                                              'https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg',
-                                            ),
+                                          : const AssetImage(
+                                              PathConstant.DEFAULT_AVATAR_IMAGE_PATH,
+                                            ) as ImageProvider,
                                     ),
                                   ),
                                   // const Spacer(),
