@@ -7,6 +7,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user.dart';
 import 'firebase_database_provider.dart';
 
+const int CODE_SEND_TIME = 3;
+
 class AuthenticationProvider {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseDatabaseProvider _databaseProvider = FirebaseDatabaseProvider();
@@ -86,8 +88,8 @@ class AuthenticationProvider {
           FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
 
       // Once signed in, return the UserCredential
-      final UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(facebookAuthCredential);
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(facebookAuthCredential);
 
       log(userCredential.toString());
       final User? user = userCredential.user;
@@ -129,8 +131,8 @@ class AuthenticationProvider {
       );
 
       // Once signed in, return the UserCredential
-      final UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(googleAuthCredential);
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(googleAuthCredential);
 
       log(userCredential.toString());
       final User? user = userCredential.user;
@@ -154,5 +156,68 @@ class AuthenticationProvider {
       log(e.toString());
     }
     return null;
+  }
+
+  Future<String> verifyPhoneNumber({required String phoneNumber}) async {
+    String verificationID = '';
+    try {
+      await _firebaseAuth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {
+          log(phoneAuthCredential.toString());
+        },
+        verificationFailed: (FirebaseAuthException error) async {
+          log(error.message!);
+        },
+        codeSent: (String verificationId, int? forceResendingToken) async {
+          verificationID = verificationId;
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          log('codeAutoRetrievalTimeout: $verificationId');
+        },
+      );
+      while (verificationID.isEmpty) {
+        await Future<void>.delayed(const Duration(seconds: CODE_SEND_TIME));
+      }
+    } on FirebaseAuthException catch (e) {
+      log(e.message!);
+      return 'error';
+    }
+    return verificationID;
+  }
+
+  Future<UserModel?> signUpWithPhoneNumber({
+    required String verificationId,
+    required String otpCode,
+  }) async {
+    try {
+      final PhoneAuthCredential phoneCredential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: otpCode,
+      );
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(phoneCredential);
+      log(userCredential.toString());
+      final User? user = userCredential.user;
+      if (user != null) {
+        final UserModel newUser = UserModel.instance;
+        newUser.userID = user.uid;
+        newUser.userName = 'user_${user.phoneNumber!.split('+84').last}';
+        newUser.phone = '0${user.phoneNumber!.split('+84').last}';
+        newUser.email = user.email ?? '';
+        newUser.name = user.displayName ?? 'New Account';
+        final int result = await _databaseProvider.createUser(newUser);
+        if (result == 1) {
+          return newUser;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    } on FirebaseAuthException catch (e) {
+      log(e.message!);
+      return null;
+    }
   }
 }
