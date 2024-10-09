@@ -35,7 +35,8 @@ class _SendOTPScreenState extends State<SendOTPScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String verificationId = ModalRoute.of(context)!.settings.arguments! as String;
+    final String verificationId =
+        ModalRoute.of(context)!.settings.arguments! as String;
 
     return Scaffold(
       body: SafeArea(
@@ -78,8 +79,8 @@ class _SendOTPScreenState extends State<SendOTPScreen> {
                         disabledForegroundColor: ColorConstant.WHITE
                             .withOpacity(DimensionConstant.SIZE_0_POINT_5),
                       ),
-                      child: BlocConsumer<AuthenticationBloc,
-                          AuthenticationState>(
+                      child:
+                          BlocConsumer<AuthenticationBloc, AuthenticationState>(
                         listener: (
                           BuildContext context,
                           AuthenticationState state,
@@ -92,11 +93,13 @@ class _SendOTPScreenState extends State<SendOTPScreen> {
                             );
                           }
                           if (state is AuthenticationFailed) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(state.error),
-                              ),
-                            );
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text(state.error),
+                                ),
+                              );
                           }
                         },
                         builder: (
@@ -110,13 +113,11 @@ class _SendOTPScreenState extends State<SendOTPScreen> {
                           }
                           return Text(
                             StringConstant.SIGN_UP_LABEL,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(
-                                  fontSize: DimensionConstant.SIZE_14,
-                                  color: ColorConstant.WHITE,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      fontSize: DimensionConstant.SIZE_14,
+                                      color: ColorConstant.WHITE,
+                                    ),
                           );
                         },
                       ),
