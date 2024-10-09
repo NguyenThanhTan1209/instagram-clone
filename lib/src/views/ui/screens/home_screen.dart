@@ -31,9 +31,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: _screens[_currentIndex]),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: _isReelTab ? ColorConstant.FF262626 : ColorConstant.WHITE,
+        backgroundColor:
+            _isReelTab ? ColorConstant.FF262626 : ColorConstant.WHITE,
         currentIndex: _currentIndex,
         iconSize: DimensionConstant.SIZE_27,
         showSelectedLabels: false,
@@ -44,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _currentIndex = value;
             if (value == _reelTabPosition) {
               _isReelTab = true;
-            }else{
+            } else {
               _isReelTab = false;
             }
           });

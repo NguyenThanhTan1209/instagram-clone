@@ -18,7 +18,7 @@ class AuthenticationBloc
       emit(AuthenticationInProgress());
       try {
         final UserModel? user = await _repository.signInWithEmailAndPassword(
-          email: event.username,
+          email: event.email,
           password: event.password,
         );
         if (user != null) {
@@ -80,7 +80,7 @@ class AuthenticationBloc
       emit(AuthenticationInProgress());
       try {
         final UserModel? user = await _repository.signUpWithEmailAndPassword(
-          email: event.username,
+          email: event.email,
           password: event.password,
         );
         if (user != null) {
@@ -97,12 +97,13 @@ class AuthenticationBloc
         (VerifyWithPhoneNumber event, Emitter<AuthenticationState> emit) async {
       emit(AuthenticationInProgress());
       try {
-        final String result = await _repository.verifyPhoneNumber(phoneNumber: event.phoneNumber);
-        if(result.isNotEmpty){
+        final String result =
+            await _repository.verifyPhoneNumber(phoneNumber: event.phoneNumber);
+        if (result.isNotEmpty) {
           emit(VerifyPhoneNumberSucess(verificationId: result));
-        }else if(result.contains('error')){
+        } else if (result.contains('')) {
           emit(AuthenticationFailed(error: 'Sign up failed'));
-        }else{
+        } else {
           emit(AuthenticationInProgress());
         }
       } on FirebaseAuthException catch (e) {

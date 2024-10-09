@@ -1,4 +1,4 @@
-import 'package:file_picker/file_picker.dart';
+import 'dart:io';
 
 abstract class UserEvent {}
 
@@ -12,5 +12,5 @@ class UpdateUserInformation extends UserEvent {
   UpdateUserInformation({required this.avatarPicker, required this.updateUser});
 
   final Map<String, String> updateUser;
-  final PlatformFile? avatarPicker;
+  final File? avatarPicker;
 }

@@ -26,9 +26,9 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen>
     with SingleTickerProviderStateMixin {
-  final int profileContentLength = 2;
-  late final TabController tabController;
-  final List<Map<String, String>> iconPathDatas = <Map<String, String>>[
+  final int _profileContentLength = 2;
+  late final TabController _tabController;
+  final List<Map<String, String>> _iconPathDatas = <Map<String, String>>[
     <String, String>{
       'title': 'Archive',
       'iconPath': PathConstant.ARCHIVE_ICON_PATH,
@@ -73,7 +73,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
     context
         .read<UserBloc>()
         .add(GetUserByID(userID: AuthenticationProvider().currentUser!.uid));
-    tabController = TabController(length: profileContentLength, vsync: this);
+    _tabController = TabController(length: _profileContentLength, vsync: this);
   }
 
   void _navigateEditProfileScreen(UserModel userModel) {
@@ -88,6 +88,12 @@ class _UserProfileScreenState extends State<UserProfileScreen>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: Drawer(
@@ -98,11 +104,11 @@ class _UserProfileScreenState extends State<UserProfileScreen>
               child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
                   return DrawerListItem(
-                    title: iconPathDatas[index]['title']!,
-                    iconPath: iconPathDatas[index]['iconPath']!,
+                    title: _iconPathDatas[index]['title']!,
+                    iconPath: _iconPathDatas[index]['iconPath']!,
                   );
                 },
-                itemCount: iconPathDatas.length,
+                itemCount: _iconPathDatas.length,
               ),
             ),
             DrawerListItem(
@@ -438,7 +444,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                 body: Column(
                   children: <Widget>[
                     TabBar(
-                      controller: tabController,
+                      controller: _tabController,
                       indicatorColor: ColorConstant.FF262626,
                       indicatorSize: TabBarIndicatorSize.tab,
                       tabs: <Widget>[
@@ -456,7 +462,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                     ),
                     Expanded(
                       child: TabBarView(
-                        controller: tabController,
+                        controller: _tabController,
                         children: <Widget>[
                           GridView.count(
                             crossAxisCount: 3,
