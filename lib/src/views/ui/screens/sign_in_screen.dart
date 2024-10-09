@@ -54,7 +54,6 @@ class SignInScreen extends StatelessWidget {
               );
             }
             if (state is AuthenticationFailed) {
-              Navigator.of(context).pop();
               final SnackBar snackBar = SnackBar(
                 elevation: 0,
                 behavior: SnackBarBehavior.floating,
