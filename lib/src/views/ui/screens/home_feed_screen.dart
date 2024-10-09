@@ -26,7 +26,6 @@ class HomeFeedScreen extends StatefulWidget {
 }
 
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -115,31 +114,37 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                       );
                     } else if (state is PostListSuccess) {
                       final List<Post> posts = state.postList;
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          final Post post = posts[index];
-                          final ValueNotifier<int> postIndex =
-                              ValueNotifier<int>(1);
+                      if (posts.isNotEmpty) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
+                            final Post post = posts[index];
+                            final ValueNotifier<int> postIndex =
+                                ValueNotifier<int>(1);
 
-                          return Column(
-                            children: <Widget>[
-                              PostTitleWidget(post: post),
-                              PostMediaWidget(
-                                post: post,
-                                screenWith: screenWith,
-                                postIndex: postIndex,
-                              ),
-                              PostFooterWidget(
-                                postIndex: postIndex,
-                                post: post,
-                              ),
-                            ],
-                          );
-                        },
-                        itemCount: posts.length,
-                      );
+                            return Column(
+                              children: <Widget>[
+                                PostTitleWidget(post: post),
+                                PostMediaWidget(
+                                  post: post,
+                                  screenWith: screenWith,
+                                  postIndex: postIndex,
+                                ),
+                                PostFooterWidget(
+                                  postIndex: postIndex,
+                                  post: post,
+                                ),
+                              ],
+                            );
+                          },
+                          itemCount: posts.length,
+                        );
+                      } else {
+                        return const Center(
+                          child: Text('Nothing to see'),
+                        );
+                      }
                     } else {
                       return Container();
                     }
