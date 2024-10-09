@@ -11,6 +11,7 @@ class EditProfileTextFieldWidget extends StatelessWidget {
     required this.controller,
     this.isExpand = false,
     this.isEnable = true,
+    this.onChanged,
   });
 
   final String label;
@@ -18,6 +19,7 @@ class EditProfileTextFieldWidget extends StatelessWidget {
   final TextEditingController controller;
   final bool isExpand;
   final bool isEnable;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class EditProfileTextFieldWidget extends StatelessWidget {
               left: DimensionConstant.SIZE_16,
             ),
             child: TextField(
+              onChanged: onChanged,
               enabled: isEnable,
               controller: controller,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(

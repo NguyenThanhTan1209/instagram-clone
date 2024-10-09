@@ -3,16 +3,16 @@ enum AuthenticationEnum { PASS, FAILED }
 abstract class AuthenticationEvent {}
 
 class SignUpWithEmailAndPassword extends AuthenticationEvent {
-  SignUpWithEmailAndPassword({required this.username, required this.password});
+  SignUpWithEmailAndPassword({required this.email, required this.password});
 
-  final String username;
+  final String email;
   final String password;
 }
 
 class SignInWithEmailAndPassword extends AuthenticationEvent {
-  SignInWithEmailAndPassword({required this.username, required this.password});
+  SignInWithEmailAndPassword({required this.email, required this.password});
 
-  final String username;
+  final String email;
   final String password;
 }
 

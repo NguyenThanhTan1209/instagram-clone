@@ -7,7 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user.dart';
 import 'firebase_database_provider.dart';
 
-const int CODE_SEND_TIME = 3;
+const int CODE_SEND_TIME = 2;
 
 class AuthenticationProvider {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -22,18 +22,32 @@ class AuthenticationProvider {
     required String password,
   }) async {
     try {
-      final UserCredential credential =
+      final UserCredential userCredential =
           await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      final User? user = credential.user;
-      if (user != null) {
-        final UserModel signInUser = UserModel.instance;
-        signInUser.userID = user.uid;
-        signInUser.userName = user.email ?? '';
-        signInUser.password = user.displayName ?? '';
-        return signInUser;
+      if (userCredential.user != null &&
+          userCredential.additionalUserInfo!.isNewUser) {
+        final User signUpUnser = userCredential.user!;
+        final UserModel newUser = UserModel.instance;
+        newUser.userID = signUpUnser.uid;
+        newUser.userName = signUpUnser.email!.split('@').first;
+        newUser.email = signUpUnser.email ?? '';
+        newUser.name = signUpUnser.displayName ?? 'New Account';
+
+        final int result = await _databaseProvider.createUser(newUser);
+        if (result == 1) {
+          return newUser;
+        } else {
+          return null;
+        }
+      } else {
+        final UserModel? user =
+            await _databaseProvider.readUserByID(userCredential.user!.uid);
+        if (user != null) {
+          return user;
+        }
       }
     } catch (e) {
       log(e.toString());
@@ -82,32 +96,32 @@ class AuthenticationProvider {
     try {
       // Trigger the sign-in flow
       final LoginResult loginResult = await FacebookAuth.instance.login();
-
       // Create a credential from the access token
       final OAuthCredential facebookAuthCredential =
           FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
-
       // Once signed in, return the UserCredential
       final UserCredential userCredential =
           await _firebaseAuth.signInWithCredential(facebookAuthCredential);
 
-      log(userCredential.toString());
-      final User? user = userCredential.user;
-      if (user != null) {
+      if (userCredential.user != null &&
+          userCredential.additionalUserInfo!.isNewUser) {
+        final User signUpUser = userCredential.user!;
         final UserModel newUser = UserModel.instance;
-        newUser.userID = user.uid;
-        newUser.userName = user.email!.split('@').first;
-        newUser.email = user.email ?? '';
-        newUser.name = user.displayName ?? 'New Account';
+        newUser.userID = signUpUser.uid;
+        newUser.userName = signUpUser.email!.split('@').first;
+        newUser.email = signUpUser.email ?? '';
+        newUser.name = signUpUser.displayName ?? 'New Account';
 
         final int result = await _databaseProvider.createUser(newUser);
         if (result == 1) {
           return newUser;
-        } else {
-          return null;
         }
       } else {
-        return null;
+        final UserModel? user =
+            await _databaseProvider.readUserByID(userCredential.user!.uid);
+        if (user != null) {
+          return user;
+        }
       }
     } catch (e) {
       log(e.toString());
@@ -119,11 +133,9 @@ class AuthenticationProvider {
     try {
       // Trigger the sign-in flow
       final GoogleSignInAccount? loginResult = await GoogleSignIn().signIn();
-
       // Create a credential from the access token
       final GoogleSignInAuthentication googleSignInAuthentication =
           await loginResult!.authentication;
-
       final OAuthCredential googleAuthCredential =
           GoogleAuthProvider.credential(
         idToken: googleSignInAuthentication.idToken,
@@ -134,14 +146,14 @@ class AuthenticationProvider {
       final UserCredential userCredential =
           await _firebaseAuth.signInWithCredential(googleAuthCredential);
 
-      log(userCredential.toString());
-      final User? user = userCredential.user;
-      if (user != null) {
+      if (userCredential.user != null &&
+          userCredential.additionalUserInfo!.isNewUser) {
+        final User signUpUnser = userCredential.user!;
         final UserModel newUser = UserModel.instance;
-        newUser.userID = user.uid;
-        newUser.userName = user.email!.split('@').first;
-        newUser.email = user.email ?? '';
-        newUser.name = user.displayName ?? 'New Account';
+        newUser.userID = signUpUnser.uid;
+        newUser.userName = signUpUnser.email!.split('@').first;
+        newUser.email = signUpUnser.email ?? '';
+        newUser.name = signUpUnser.displayName ?? 'New Account';
 
         final int result = await _databaseProvider.createUser(newUser);
         if (result == 1) {
@@ -150,7 +162,11 @@ class AuthenticationProvider {
           return null;
         }
       } else {
-        return null;
+        final UserModel? user =
+            await _databaseProvider.readUserByID(userCredential.user!.uid);
+        if (user != null) {
+          return user;
+        }
       }
     } catch (e) {
       log(e.toString());
@@ -164,10 +180,10 @@ class AuthenticationProvider {
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {
-          log(phoneAuthCredential.toString());
+          log('verificationCompleted: $phoneAuthCredential');
         },
         verificationFailed: (FirebaseAuthException error) async {
-          log(error.message!);
+          log('verificationFailed: ${error.message}');
         },
         codeSent: (String verificationId, int? forceResendingToken) async {
           verificationID = verificationId;
@@ -197,15 +213,17 @@ class AuthenticationProvider {
       );
       final UserCredential userCredential =
           await _firebaseAuth.signInWithCredential(phoneCredential);
-      log(userCredential.toString());
-      final User? user = userCredential.user;
-      if (user != null) {
+
+      if (userCredential.user != null &&
+          userCredential.additionalUserInfo!.isNewUser) {
+        final User signUpUnser = userCredential.user!;
         final UserModel newUser = UserModel.instance;
-        newUser.userID = user.uid;
-        newUser.userName = 'user_${user.phoneNumber!.split('+84').last}';
-        newUser.phone = '0${user.phoneNumber!.split('+84').last}';
-        newUser.email = user.email ?? '';
-        newUser.name = user.displayName ?? 'New Account';
+        newUser.userID = signUpUnser.uid;
+        newUser.userName = 'user_${signUpUnser.phoneNumber!.split('+84').last}';
+        newUser.phone = '0${signUpUnser.phoneNumber!.split('+84').last}';
+        newUser.email = signUpUnser.email ?? '';
+        newUser.name = signUpUnser.displayName ?? 'New Account';
+
         final int result = await _databaseProvider.createUser(newUser);
         if (result == 1) {
           return newUser;
@@ -213,11 +231,15 @@ class AuthenticationProvider {
           return null;
         }
       } else {
-        return null;
+        final UserModel? user =
+            await _databaseProvider.readUserByID(userCredential.user!.uid);
+        if (user != null) {
+          return user;
+        }
       }
     } on FirebaseAuthException catch (e) {
       log(e.message!);
-      return null;
     }
+    return null;
   }
 }

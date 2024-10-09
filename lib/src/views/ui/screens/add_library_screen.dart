@@ -71,7 +71,6 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
         );
         setState(() {});
       });
-    log(videoFile.path);
   }
 
   Future<void> _initMediaLibrary() async {

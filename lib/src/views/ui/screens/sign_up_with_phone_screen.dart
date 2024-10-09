@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -101,11 +100,13 @@ class _SignUpWithPhoneScreenState extends State<SignUpWithPhoneScreen> {
                             );
                           }
                           if (state is AuthenticationFailed) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(state.error),
-                              ),
-                            );
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text(state.error),
+                                ),
+                              );
                           }
                         },
                         builder:
@@ -116,7 +117,7 @@ class _SignUpWithPhoneScreenState extends State<SignUpWithPhoneScreen> {
                             );
                           }
                           return Text(
-                            StringConstant.SIGN_UP_LABEL,
+                            StringConstant.SIGN_IN_LABEL,
                             style:
                                 Theme.of(context).textTheme.bodyLarge!.copyWith(
                                       fontSize: DimensionConstant.SIZE_14,

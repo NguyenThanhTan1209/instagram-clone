@@ -37,8 +37,8 @@ class FirebaseDatabaseProvider {
       return 1;
     } on Exception catch (e) {
       log(e.toString());
-      return 0;
     }
+    return 0;
   }
 
   Future<UserModel?> readUserByID(String userID) {
@@ -57,11 +57,11 @@ class FirebaseDatabaseProvider {
     );
   }
 
-  Future<int> updateUser(Map<String,String> updatedData, PlatformFile? avatarFile) async {
+  Future<int> updateUser(Map<String,String> updatedData, File? avatarFile) async {
     if (avatarFile != null) {
       final String avatarPath =
-          '${PathConstant.FIREBASE_USER_STORAGE_PATH}/${updatedData['userID']}/avatar/${DateTime.now().millisecondsSinceEpoch}/${avatarFile.name}';
-      final File file = File(avatarFile.path!);
+          '${PathConstant.FIREBASE_USER_STORAGE_PATH}/${updatedData['userID']}/avatar/${DateTime.now().millisecondsSinceEpoch}/$avatarFile';
+      final File file = File(avatarFile.path);
 
       final Reference ref = _storage.ref().child(avatarPath);
       _avatarUploadTask = ref.putFile(file);
@@ -77,7 +77,6 @@ class FirebaseDatabaseProvider {
 
     try {
       await userDoc.update(updatedData);
-      UserModel.fromJson(updatedData);
       return 1;
     } catch (e) {
       log(e.toString());
