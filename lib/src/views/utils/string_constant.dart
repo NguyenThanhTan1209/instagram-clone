@@ -39,7 +39,7 @@ class StringConstant {
 
   static const String PASSWORD_LABEL = 'Password';
 
-  static const String INSTAGRAM_OR_FACEBOOK = 'Instagram or Facebook';
+  static const String GOOGLE_OR_FACEBOOK = 'Google or Facebook';
 
   static const String POSTS_LABEL = 'Posts';
   static const String FOLLOWERS_LABEL = 'Followers';
@@ -112,4 +112,8 @@ class StringConstant {
   static const String SIGN_UP_WITH_EMAIL_LABEL = 'Sign up with email';
 
   static const String SIGN_UP_WITH_PHONE_LABEL = 'Sign up with phone number';
+
+  static const String EMAIL_LABEL = 'Email';
+
+  static const String PASSWORD_HINT_LABEL = 'Password must be at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, 1 special character';
 }
