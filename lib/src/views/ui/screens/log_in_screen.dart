@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,30 +21,69 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-  late TextEditingController _userNameController;
+  late TextEditingController _emailController;
   late TextEditingController _passwordController;
   late bool _isHidePassword;
-  final String _spacing = ' ';
-  late bool _isValidLoginInfo;
-  late bool _isUsernameValid;
+  late bool _isemailValid;
   late bool _isPasswordValid;
 
   @override
   void initState() {
     super.initState();
-    _userNameController = TextEditingController();
+    _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _isHidePassword = true;
-    _isUsernameValid = _userNameController.text.trim().isNotEmpty &&
-        _userNameController.text.contains(_spacing);
-    _isPasswordValid = _passwordController.text.trim().isNotEmpty;
-    _isValidLoginInfo = false;
+    _checkValid();
+  }
+
+  void _checkValid() {
+    _isemailValid = _validateEmail(_emailController.text);
+    _isPasswordValid = _validatePassword(_passwordController.text);
+  }
+
+  bool _validateEmail(String email) {
+    final RegExp emailRegExp =
+        RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$');
+    return emailRegExp.hasMatch(email);
+  }
+
+  bool _validatePassword(String password) {
+    // Quy tắc độ dài tối thiểu
+    if (password.length < 8) {
+      return false;
+    }
+    // Quy tắc phức tạp
+    final bool hasUppercase = password.contains(RegExp(r'[A-Z]'));
+    final bool hasLowercase = password.contains(RegExp(r'[a-z]'));
+    final bool hasNumbers = password.contains(RegExp(r'[0-9]'));
+    final bool hasSpecialCharacters =
+        password.contains(RegExp(r'[!@#$%^&*()_+]'));
+
+    if (!hasUppercase ||
+        !hasLowercase ||
+        !hasNumbers ||
+        !hasSpecialCharacters) {
+      return false;
+    }
+    return true;
+  }
+
+  void onEmailChanged(String value) {
+    setState(() {
+      _isemailValid = _validateEmail(value);
+    });
+  }
+
+  void onPasswordChanged(String value) {
+    setState(() {
+      _isPasswordValid = _validatePassword(value);
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    _userNameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
   }
 
@@ -51,11 +91,48 @@ class _LogInScreenState extends State<LogInScreen> {
     Navigator.of(context).pushNamed(RouteConstant.SOCIAL_LOG_IN_SCREEN_ROUTE);
   }
 
-  //? temp
-  void _logIn(BuildContext context, String username, String password) {
+  void _logIn(BuildContext context, String email, String password) {
+    if (!_isemailValid) {
+      _buildSnackbar(
+        title: 'Log in failed',
+        message: 'Email is not incorrect format. Try again.',
+        contentType: ContentType.failure,
+      );
+      return;
+    }
+    if (!_isPasswordValid) {
+      _buildSnackbar(
+        title: 'Log in failed',
+        message:
+            'Password >= 8 characters, uppercase, lowercase, number, special',
+        contentType: ContentType.failure,
+      );
+      return;
+    }
     context.read<AuthenticationBloc>().add(
-          SignInWithEmailAndPassword(username: username, password: password),
+          SignInWithEmailAndPassword(email: email, password: password),
         );
+  }
+
+  void _buildSnackbar({
+    required String title,
+    required String message,
+    required ContentType contentType,
+  }) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: title,
+            message: message,
+            contentType: contentType,
+          ),
+        ),
+      );
   }
 
   @override
@@ -82,7 +159,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   height: DimensionConstant.SIZE_50,
                 ),
                 const SizedBox(height: DimensionConstant.SIZE_40),
-                _buildUsernameTextField(context),
+                _buildemailTextField(context),
                 const SizedBox(
                   height: DimensionConstant.SIZE_12,
                 ),
@@ -115,15 +192,13 @@ class _LogInScreenState extends State<LogInScreen> {
                     horizontal: DimensionConstant.SIZE_16,
                   ),
                   child: ElevatedButton(
-                    onPressed: _isValidLoginInfo
-                        ? () {
-                            _logIn(
-                              context,
-                              _userNameController.text,
-                              _passwordController.text,
-                            );
-                          }
-                        : null,
+                    onPressed: () {
+                      _logIn(
+                        context,
+                        _emailController.text,
+                        _passwordController.text,
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       minimumSize:
                           const Size.fromHeight(DimensionConstant.SIZE_44),
@@ -151,11 +226,13 @@ class _LogInScreenState extends State<LogInScreen> {
                           );
                         }
                         if (state is AuthenticationFailed) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.error),
-                            ),
-                          );
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(state.error),
+                              ),
+                            );
                         }
                       },
                       builder:
@@ -243,7 +320,7 @@ class _LogInScreenState extends State<LogInScreen> {
             ),
             SignInFooterWidget(
               label: '',
-              actionLabel: StringConstant.INSTAGRAM_OR_FACEBOOK,
+              actionLabel: StringConstant.GOOGLE_OR_FACEBOOK,
               actionColor: ColorConstant.BLACK
                   .withOpacity(DimensionConstant.SIZE_0_POINT_40),
               onPressed: _navigateToSocialLogInScreen,
@@ -260,12 +337,7 @@ class _LogInScreenState extends State<LogInScreen> {
         horizontal: DimensionConstant.SIZE_16,
       ),
       child: TextField(
-        onChanged: (String value) {
-          setState(() {
-            _isPasswordValid = value.isNotEmpty;
-            _isValidLoginInfo = _isUsernameValid && _isPasswordValid;
-          });
-        },
+        onChanged: onPasswordChanged,
         obscureText: _isHidePassword,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontSize: DimensionConstant.SIZE_14,
@@ -322,25 +394,20 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  Padding _buildUsernameTextField(BuildContext context) {
+  Padding _buildemailTextField(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: DimensionConstant.SIZE_16,
       ),
       child: TextField(
         autofocus: true,
-        onChanged: (String value) {
-          setState(() {
-            _isUsernameValid = value.isNotEmpty && !value.contains(_spacing);
-            _isValidLoginInfo = _isUsernameValid && _isPasswordValid;
-          });
-        },
+        onChanged: onEmailChanged,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontSize: DimensionConstant.SIZE_14,
               color: ColorConstant.FF262626,
             ),
         cursorColor: ColorConstant.BLACK,
-        controller: _userNameController,
+        controller: _emailController,
         decoration: InputDecoration(
           prefixIcon: Image.asset(
             PathConstant.USER_ICON_PATH,
@@ -365,14 +432,14 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
           filled: true,
           fillColor: ColorConstant.FAFAFA,
-          hintText: StringConstant.USERNAME_LABEL,
+          hintText: StringConstant.EMAIL_LABEL,
           hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 color: ColorConstant.C8C8C8,
                 fontSize: DimensionConstant.SIZE_14,
               ),
           contentPadding: EdgeInsets.zero,
           suffixIcon: Visibility(
-            visible: _isUsernameValid,
+            visible: _isemailValid,
             child: Image.asset(
               PathConstant.GREEN_TICK_ICON_PATH,
               width: DimensionConstant.SIZE_20,
