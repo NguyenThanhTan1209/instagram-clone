@@ -141,6 +141,7 @@ class _NewPostInfoInputScreenState extends State<NewPostInfoInputScreen> {
               );
             }
             if (state is PostSuccess) {
+              Navigator.of(context).pop();
               final SnackBar snackBar = SnackBar(
                 elevation: 0,
                 behavior: SnackBarBehavior.floating,
