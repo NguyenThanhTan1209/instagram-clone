@@ -15,11 +15,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
         emit(PostListInProgress());
         try {
           final List<Post> result = await repository.readPostList();
-          if (result.isNotEmpty) {
-            emit(PostListSuccess(postList: result));
-          } else {
-            emit(PostListFailed(error: 'Load list failed'));
-          }
+          emit(PostListSuccess(postList: result));
         } catch (e) {
           log(e.toString());
           emit(PostListFailed(error: 'Something failed'));
