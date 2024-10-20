@@ -1,9 +1,5 @@
-import 'dart:io';
-
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../../business_logic/blocs/post_list/post_list_bloc.dart';
 import '../../../business_logic/blocs/post_list/post_list_event.dart';
@@ -25,7 +21,7 @@ class HomeFeedScreen extends StatefulWidget {
   State<HomeFeedScreen> createState() => _HomeFeedScreenState();
 }
 
-class _HomeFeedScreenState extends State<HomeFeedScreen> {
+class _HomeFeedScreenState extends State<HomeFeedScreen>{
   @override
   void initState() {
     super.initState();
@@ -34,7 +30,6 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWith = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: SafeArea(
@@ -128,7 +123,6 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                 PostTitleWidget(post: post),
                                 PostMediaWidget(
                                   post: post,
-                                  screenWith: screenWith,
                                   postIndex: postIndex,
                                 ),
                                 PostFooterWidget(

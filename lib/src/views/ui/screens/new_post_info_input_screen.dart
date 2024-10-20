@@ -50,7 +50,7 @@ class _NewPostInfoInputScreenState extends State<NewPostInfoInputScreen> {
 
   void _sharePost() {
     final UserModel currentUser = UserModel.instance;
-    final DateFormat dateFormat = DateFormat('dd/MM/yyyy hh:mm');
+    final DateFormat dateFormat = DateFormat('dd/MM/yyyy H:mm');
     final String createdDate = dateFormat.format(DateTime.now());
 
     final Post post = Post(
@@ -58,13 +58,39 @@ class _NewPostInfoInputScreenState extends State<NewPostInfoInputScreen> {
       userID: currentUser.userID,
       userName: currentUser.userName,
       avatarPath: currentUser.avatarPath,
-      images: <String>[previewFile!.path],
+      media: <String>[previewFile!.path],
       comments: <String>[],
       likedUsers: <String>[],
       content: _captionController.text,
       createdDate: createdDate,
     );
     context.read<PostBloc>().add(CreatePost(post: post));
+  }
+
+  Future<bool> _onBackPressed() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Sign up will be cancelled'),
+        content: const Text('Are you sure you want to come back?'),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            child: const Text('Yes'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('No'),
+          ),
+        ],
+      ),
+    );
+    return false;
   }
 
   @override
@@ -90,17 +116,14 @@ class _NewPostInfoInputScreenState extends State<NewPostInfoInputScreen> {
         shadowColor: ColorConstant.BLACK,
         elevation: DimensionConstant.SIZE_1,
         backgroundColor: ColorConstant.WHITE,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: DimensionConstant.SIZE_10),
-          child: Center(
-            child: GestureDetector(
-              onTap: () {
-                _cancelPreview(context);
-              },
-              child: Text(
-                StringConstant.CANCEL_LABEL,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+        leading: Center(
+          child: GestureDetector(
+            onTap: () {
+              _cancelPreview(context);
+            },
+            child: Text(
+              StringConstant.CANCEL_LABEL,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
         ),
@@ -114,213 +137,233 @@ class _NewPostInfoInputScreenState extends State<NewPostInfoInputScreen> {
         ),
         centerTitle: true,
         actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: ColorConstant.FF3897F0,
-            ),
-            onPressed: _sharePost,
-            child: Text(
-              StringConstant.SHARE_LABEL,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    fontSize: DimensionConstant.SIZE_16,
-                    color: ColorConstant.FF3897F0,
+          BlocConsumer<PostBloc, PostState>(
+            listener: (BuildContext context, PostState state) {
+              if (state is PostSuccess) {
+                if (FocusManager.instance.primaryFocus != null) {
+                  FocusManager.instance.primaryFocus!.unfocus();
+                }
+                final SnackBar snackBar = SnackBar(
+                  elevation: 0,
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.transparent,
+                  content: AwesomeSnackbarContent(
+                    title: 'Success',
+                    message: 'Posted successfully',
+                    contentType: ContentType.success,
                   ),
-            ),
+                );
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(snackBar);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  RouteConstant.HOME_SCREEN_ROUTE,
+                  (Route<dynamic> route) => false,
+                );
+              }
+              if (state is PostFailed) {
+                final SnackBar snackBar = SnackBar(
+                  elevation: 0,
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.transparent,
+                  content: AwesomeSnackbarContent(
+                    title: 'Failed',
+                    message: 'Posting failed. Please try again.',
+                    contentType: ContentType.success,
+                  ),
+                );
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(snackBar);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  RouteConstant.HOME_SCREEN_ROUTE,
+                  (Route<dynamic> route) => false,
+                );
+              }
+            },
+            builder: (BuildContext context, PostState state) {
+              if (state is PostInProgress) {
+                return const CircularProgressIndicator(
+                  color: ColorConstant.FF3897F0,
+                );
+              }
+              return TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: ColorConstant.FF3897F0,
+                ),
+                onPressed: _sharePost,
+                child: Text(
+                  StringConstant.SHARE_LABEL,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontSize: DimensionConstant.SIZE_16,
+                        color: ColorConstant.FF3897F0,
+                      ),
+                ),
+              );
+            },
           ),
         ],
       ),
       body: SafeArea(
-        child: BlocListener<PostBloc, PostState>(
-          listener: (BuildContext context, PostState state) {
-            if (state is PostInProgress) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
-            if (state is PostSuccess) {
-              Navigator.of(context).pop();
-              final SnackBar snackBar = SnackBar(
-                elevation: 0,
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Success',
-                  message: 'Posted successfully',
-                  contentType: ContentType.success,
-                ),
-              );
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(snackBar);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                RouteConstant.HOME_SCREEN_ROUTE,
-                (Route<dynamic> route) => false,
-              );
-            }
-          },
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: ColorConstant.EEEEEE),
-                    ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: ColorConstant.EEEEEE),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          width: DimensionConstant.SIZE_100,
-                          height: DimensionConstant.SIZE_100,
-                          child: previewFile!.mediaType == MediaType.VIDEO
-                              ? AspectRatio(
-                                  aspectRatio:
-                                      _videoPlayerController.value.aspectRatio,
-                                  child: VideoPlayer(_videoPlayerController),
-                                )
-                              : Image.file(
-                                  File(previewFile!.path),
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
-                        const SizedBox(
-                          width: DimensionConstant.SIZE_16,
-                        ),
-                        Expanded(
-                          child: TextField(
-                            controller: _captionController,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: DimensionConstant.SIZE_10.toInt(),
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.zero,
-                              border: InputBorder.none,
-                              hintText: 'Write a caption...',
-                            ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        width: DimensionConstant.SIZE_100,
+                        height: DimensionConstant.SIZE_100,
+                        child: previewFile!.mediaType == MediaType.VIDEO
+                            ? AspectRatio(
+                                aspectRatio:
+                                    _videoPlayerController.value.aspectRatio,
+                                child: VideoPlayer(_videoPlayerController),
+                              )
+                            : Image.file(
+                                File(previewFile!.path),
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                      const SizedBox(
+                        width: DimensionConstant.SIZE_16,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _captionController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: DimensionConstant.SIZE_10.toInt(),
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.zero,
+                            border: InputBorder.none,
+                            hintText: 'Write a caption...',
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: ColorConstant.EEEEEE),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          StringConstant.TAG_PEOPLE_LABEL,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        const Icon(Icons.chevron_right_rounded),
-                      ],
-                    ),
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: ColorConstant.EEEEEE),
                   ),
                 ),
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: ColorConstant.EEEEEE),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          StringConstant.ADD_LOCATION_LABEL,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        const Icon(Icons.chevron_right_rounded),
-                      ],
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        StringConstant.TAG_PEOPLE_LABEL,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const Icon(Icons.chevron_right_rounded),
+                    ],
                   ),
                 ),
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: ColorConstant.EEEEEE),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              StringConstant.FACEBOOK_LABEL,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            CupertinoSwitch(
-                              value: _facebookPostChoice,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  _facebookPostChoice = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: DimensionConstant.SIZE_16,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              StringConstant.TWITTER_LABEL,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            CupertinoSwitch(
-                              value: _twitterPostChoice,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  _twitterPostChoice = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: DimensionConstant.SIZE_16,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              StringConstant.TUMBLUR_LABEL,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            CupertinoSwitch(
-                              value: _tumblerPostChoice,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  _tumblerPostChoice = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: ColorConstant.EEEEEE),
                   ),
                 ),
-              ],
-            ),
+                child: Padding(
+                  padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        StringConstant.ADD_LOCATION_LABEL,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const Icon(Icons.chevron_right_rounded),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: ColorConstant.EEEEEE),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(DimensionConstant.SIZE_16),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            StringConstant.FACEBOOK_LABEL,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          CupertinoSwitch(
+                            value: _facebookPostChoice,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _facebookPostChoice = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: DimensionConstant.SIZE_16,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            StringConstant.TWITTER_LABEL,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          CupertinoSwitch(
+                            value: _twitterPostChoice,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _twitterPostChoice = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: DimensionConstant.SIZE_16,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            StringConstant.TUMBLUR_LABEL,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          CupertinoSwitch(
+                            value: _tumblerPostChoice,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _tumblerPostChoice = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

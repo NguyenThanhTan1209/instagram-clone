@@ -38,110 +38,111 @@ class _SendOTPScreenState extends State<SendOTPScreen> {
     final String verificationId =
         ModalRoute.of(context)!.settings.arguments! as String;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    PathConstant.INSTA_BLACK_LOGO_PATH,
-                    width: DimensionConstant.SIZE_175,
-                    height: DimensionConstant.SIZE_50,
-                  ),
-                  const SizedBox(height: DimensionConstant.SIZE_40),
-                  _buildOTPTextField(context),
-                  const SizedBox(
-                    height: DimensionConstant.SIZE_30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: DimensionConstant.SIZE_16,
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      PathConstant.INSTA_BLACK_LOGO_PATH,
+                      width: DimensionConstant.SIZE_175,
+                      height: DimensionConstant.SIZE_50,
                     ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _signUp(verificationId, _otpController.text);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize:
-                            const Size.fromHeight(DimensionConstant.SIZE_44),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            DimensionConstant.SIZE_16,
+                    const SizedBox(height: DimensionConstant.SIZE_40),
+                    _buildOTPTextField(context),
+                    const SizedBox(
+                      height: DimensionConstant.SIZE_30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: DimensionConstant.SIZE_16,
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _signUp(verificationId, _otpController.text);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          minimumSize:
+                              const Size.fromHeight(DimensionConstant.SIZE_44),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              DimensionConstant.SIZE_16,
+                            ),
                           ),
+                          backgroundColor: ColorConstant.FF3797EF,
+                          foregroundColor: ColorConstant.WHITE,
+                          disabledBackgroundColor: ColorConstant.FF3797EF
+                              .withOpacity(DimensionConstant.SIZE_0_POINT_5),
+                          disabledForegroundColor: ColorConstant.WHITE
+                              .withOpacity(DimensionConstant.SIZE_0_POINT_5),
                         ),
-                        backgroundColor: ColorConstant.FF3797EF,
-                        foregroundColor: ColorConstant.WHITE,
-                        disabledBackgroundColor: ColorConstant.FF3797EF
-                            .withOpacity(DimensionConstant.SIZE_0_POINT_5),
-                        disabledForegroundColor: ColorConstant.WHITE
-                            .withOpacity(DimensionConstant.SIZE_0_POINT_5),
-                      ),
-                      child:
-                          BlocConsumer<AuthenticationBloc, AuthenticationState>(
-                        listener: (
-                          BuildContext context,
-                          AuthenticationState state,
-                        ) {
-                          if (state is AuthenticationSuccess) {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                              RouteConstant.HOME_SCREEN_ROUTE,
-                              arguments: state.user,
-                              (Route<dynamic> route) => false,
-                            );
-                          }
-                          if (state is AuthenticationFailed) {
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(
-                                SnackBar(
-                                  content: Text(state.error),
-                                ),
+                        child: BlocConsumer<AuthenticationBloc,
+                            AuthenticationState>(
+                          listener: (
+                            BuildContext context,
+                            AuthenticationState state,
+                          ) {
+                            if (state is AuthenticationSuccess) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                RouteConstant.HOME_SCREEN_ROUTE,
+                                arguments: state.user,
+                                (Route<dynamic> route) => false,
                               );
-                          }
-                        },
-                        builder: (
-                          BuildContext context,
-                          AuthenticationState state,
-                        ) {
-                          if (state is AuthenticationInProgress) {
-                            return const CircularProgressIndicator(
-                              color: ColorConstant.WHITE,
+                            }
+                            if (state is AuthenticationFailed) {
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(
+                                  SnackBar(
+                                    content: Text(state.error),
+                                  ),
+                                );
+                            }
+                          },
+                          builder: (
+                            BuildContext context,
+                            AuthenticationState state,
+                          ) {
+                            if (state is AuthenticationInProgress) {
+                              return const CircularProgressIndicator(
+                                color: ColorConstant.WHITE,
+                              );
+                            }
+                            return Text(
+                              StringConstant.SIGN_UP_LABEL,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(
+                                    fontSize: DimensionConstant.SIZE_14,
+                                    color: ColorConstant.WHITE,
+                                  ),
                             );
-                          }
-                          return Text(
-                            StringConstant.SIGN_UP_LABEL,
-                            style:
-                                Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                      fontSize: DimensionConstant.SIZE_14,
-                                      color: ColorConstant.WHITE,
-                                    ),
-                          );
-                        },
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: DimensionConstant.SIZE_26,
-                  ),
-                  OutlineSignInButtonWidget(
-                    onPressed: _navigateToSignUpWithEmailScreen,
-                    title: StringConstant.SIGN_UP_WITH_EMAIL_LABEL,
-                    iconPath: '',
-                  ),
-                ],
+                    const SizedBox(
+                      height: DimensionConstant.SIZE_26,
+                    ),
+                    OutlineSignInButtonWidget(
+                      onPressed: _navigateToSignUpWithEmailScreen,
+                      title: StringConstant.SIGN_UP_WITH_EMAIL_LABEL,
+                      iconPath: '',
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
-  }
-
-  void _navigateToSocialLogInScreeen() {
-    Navigator.of(context).pushNamed(RouteConstant.LOG_IN_SCREEN_ROUTE);
   }
 
   Widget _buildOTPTextField(BuildContext context) {
@@ -225,6 +226,6 @@ class _SendOTPScreenState extends State<SendOTPScreen> {
         ],
       ),
     );
-    return true;
+    return false;
   }
 }
