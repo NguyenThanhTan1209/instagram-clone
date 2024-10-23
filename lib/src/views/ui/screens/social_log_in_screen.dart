@@ -21,11 +21,11 @@ class SocialLogInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    void _signInWithGoogle() {
+    void signInWithGoogle() {
       context.read<AuthenticationBloc>().add(SignInWithGoogle());
     }
 
-    void _signInWithFacebook() {
+    void signInWithFacebook() {
       context.read<AuthenticationBloc>().add(SignInWithFacebook());
     }
     
@@ -93,7 +93,7 @@ class SocialLogInScreen extends StatelessWidget {
                       height: DimensionConstant.SIZE_113,
                     ),
                     SignInButtonWidget(
-                      onPressed: _signInWithFacebook,
+                      onPressed: signInWithFacebook,
                       iconPath: PathConstant.FACEBOOK_ICON_PATH,
                       title: StringConstant.LOG_IN_WITH_FACEBOOK_TITLE,
                       backgroundColor: ColorConstant.FF3797EF,
@@ -103,7 +103,7 @@ class SocialLogInScreen extends StatelessWidget {
                     const HorizontalOrLineWidget(),
                     const SizedBox(height: DimensionConstant.SIZE_26),
                     OutlineSignInButtonWidget(
-                      onPressed: _signInWithGoogle,
+                      onPressed: signInWithGoogle,
                       title: StringConstant.SIGN_IN_WITH_GOOGLE_TITLE,
                       iconPath: PathConstant.GOOGLE_ICON_PATH,
                     ),

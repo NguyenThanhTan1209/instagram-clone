@@ -43,9 +43,6 @@ class UserModel {
   String password = '';
   String avatarPath = '';
   String name = '';
-  int postTotal = 0;
-  int followerTotal= 0;
-  int followingTotal = 0;
   String description = '';
   String website = '';
   String bio = '';
@@ -53,5 +50,7 @@ class UserModel {
   String phone = '';
   String gender = '';
   List<Post> posts = <Post>[];
+  List<String> followers = <String>[];
+  List<String> followings = <String>[];
   List<StoryAlbum> storieAlbums = <StoryAlbum>[];
 }

@@ -11,4 +11,8 @@ class PostRepository {
   Future<List<Post>> readPostList(){
     return _firebaseProvider.readPostList();
   }
+
+  Future<List<Post>> readPostListByUserId({required String userID}){
+    return _firebaseProvider.readPostListByUserId(userID: userID);
+  }
 }

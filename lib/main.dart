@@ -9,6 +9,7 @@ import 'src/business_logic/blocs/authentication/authentication_bloc.dart';
 import 'src/business_logic/blocs/post/post_bloc.dart';
 import 'src/business_logic/blocs/post_list/post_list_bloc.dart';
 import 'src/business_logic/blocs/user/user_bloc.dart';
+import 'src/business_logic/blocs/user_post_list/user_post_list_bloc.dart';
 import 'src/views/ui/screens/add_post_screen.dart';
 import 'src/views/ui/screens/edit_profile_screen.dart';
 import 'src/views/ui/screens/home_screen.dart';
@@ -62,6 +63,9 @@ class MainApp extends StatelessWidget {
         BlocProvider<PostBloc>(create: (BuildContext context) => PostBloc()),
         BlocProvider<PostListBloc>(
           create: (BuildContext context) => PostListBloc(),
+        ),
+        BlocProvider<UserPostListBloc>(
+          create: (BuildContext context) => UserPostListBloc(),
         ),
       ],
       child: MaterialApp(

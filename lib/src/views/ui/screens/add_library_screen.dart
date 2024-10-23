@@ -14,6 +14,8 @@ import '../../utils/dimension_constant.dart';
 import '../../utils/route_constant.dart';
 import '../../utils/string_constant.dart';
 
+const int PAGINATION_END_VALUE = 19;
+
 class AddLibraryScreen extends StatefulWidget {
   const AddLibraryScreen({super.key});
 
@@ -26,6 +28,10 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
   AssetEntity? _entityChoosed;
   VideoPlayerController? _videoPlayerController;
   ChewieController? _customVideoController;
+  ScrollController? _libraryController;
+  int _paginationStartValue = 0;
+  int _paginationEndValue = PAGINATION_END_VALUE;
+  int _amountOfMedia = 0;
 
   Future<void> _chooseEntity(AssetEntity entityChoosed) async {
     _entityChoosed = entityChoosed;
@@ -51,43 +57,42 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
     super.dispose();
     _videoPlayerController!.dispose();
     _customVideoController!.dispose();
+    _libraryController!.dispose();
   }
 
-  void _initVideoPlayer(File? videoFile) {
+  Future<void> _initVideoPlayer(File? videoFile) async {
     if (_videoPlayerController != null) {
       _videoPlayerController!.dispose();
       _customVideoController!.dispose();
     }
-    _videoPlayerController = VideoPlayerController.file(File(videoFile!.path))
-      ..addListener(
-        () => setState(() {}),
-      )
-      ..initialize().then((_) {
-        _customVideoController = ChewieController(
-          videoPlayerController: _videoPlayerController!,
-          aspectRatio: _videoPlayerController!.value.aspectRatio,
-          looping: true,
-          autoPlay: true,
-        );
-        setState(() {});
-      });
+    _videoPlayerController = VideoPlayerController.file(File(videoFile!.path));
+    await _videoPlayerController!.initialize();
+    _customVideoController = ChewieController(
+      videoPlayerController: _videoPlayerController!,
+      looping: true,
+      aspectRatio: _videoPlayerController!.value.aspectRatio,
+    );
+    setState(() {});
   }
 
   Future<void> _initMediaLibrary() async {
     final PermissionState libraryPermission =
         await PhotoManager.requestPermissionExtend();
     if (libraryPermission.isAuth) {
-      final int amountOfMedia = await PhotoManager.getAssetCount();
-      _mediaList =
-          await PhotoManager.getAssetListRange(start: 0, end: amountOfMedia);
+      _amountOfMedia = await PhotoManager.getAssetCount();
+      _libraryController = ScrollController();
+      _libraryController!.addListener(() {
+        fetchMediaLibrary();
+      });
+
+      _mediaList = await PhotoManager.getAssetListRange(
+        start: _paginationStartValue,
+        end: _paginationEndValue,
+        type: RequestType.image,
+      );
+
       if (_mediaList.isNotEmpty) {
-        _entityChoosed = _mediaList[0];
-        if (_entityChoosed!.type == AssetType.video) {
-          final File? videoFile = await _entityChoosed!.file;
-          _initVideoPlayer(videoFile);
-        } else {
-          setState(() {});
-        }
+        _chooseEntity(_mediaList[0]);
       }
     } else if (libraryPermission.hasAccess) {
       log('fail');
@@ -96,16 +101,43 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
     }
   }
 
-  Future<void> _navigateToNewPostInputScreen() async {
-    await _entityChoosed!.file.then((File? choosenFile) {
-      _customVideoController!.pause();
-      Navigator.of(context).pushNamed(
-        RouteConstant.NEW_POST_INFO_INPUT_SCREEN_ROUTE,
-        arguments: PreviewMediaArgument(
-          path: choosenFile!.path,
-          mediaType: choosenFile.path.split('.').last.contains('mp4') ? MediaType.VIDEO : MediaType.PICTURE,
+  Future<void> fetchMediaLibrary() async {
+    if (_libraryController!.position.maxScrollExtent ==
+            _libraryController!.offset &&
+        (_paginationEndValue <= _amountOfMedia - 1)) {
+      _paginationStartValue = _paginationEndValue + 1;
+      _paginationEndValue = _paginationStartValue + PAGINATION_END_VALUE;
+      _mediaList.addAll(
+        await PhotoManager.getAssetListRange(
+          start: _paginationStartValue,
+          end: _paginationEndValue,
+          type: RequestType.image,
         ),
       );
+      setState(() {});
+    }
+  }
+
+  Future<void> _navigateToNewPostInputScreen() async {
+    await _entityChoosed!.file.then((File? choosenFile) {
+      if (choosenFile!.path.split('.').last.contains('mp4')) {
+        _customVideoController!.pause();
+        Navigator.of(context).pushNamed(
+          RouteConstant.NEW_POST_INFO_INPUT_SCREEN_ROUTE,
+          arguments: PreviewMediaArgument(
+            path: choosenFile.path,
+            mediaType: MediaType.VIDEO,
+          ),
+        );
+      } else {
+        Navigator.of(context).pushNamed(
+          RouteConstant.NEW_POST_INFO_INPUT_SCREEN_ROUTE,
+          arguments: PreviewMediaArgument(
+            path: choosenFile.path,
+            mediaType: MediaType.PICTURE,
+          ),
+        );
+      }
     });
   }
 
@@ -172,33 +204,51 @@ class _AddLibraryScreenState extends State<AddLibraryScreen> {
                             child: Chewie(controller: _customVideoController!),
                           )
                         : Image(
-                          image: AssetEntityImageProvider(
-                            _entityChoosed!,
+                            image: AssetEntityImageProvider(
+                              _entityChoosed!,
+                            ),
+                            fit: BoxFit.cover,
                           ),
-                          fit: BoxFit.cover,
-                        ),
                   ),
                   Expanded(
-                    child: GridView.count(
-                      padding: const EdgeInsets.symmetric(vertical: DimensionConstant.SIZE_1),
-                      mainAxisSpacing: DimensionConstant.SIZE_1,
-                      crossAxisSpacing: DimensionConstant.SIZE_1,
-                      crossAxisCount: 4,
-                      children: _mediaList
-                          .map(
-                            (AssetEntity e) => GestureDetector(
-                              onTap: () {
-                                _chooseEntity(e);
-                              },
+                    child: GridView.builder(
+                      controller: _libraryController,
+                      padding: const EdgeInsets.all(
+                        DimensionConstant.SIZE_1,
+                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        mainAxisSpacing: DimensionConstant.SIZE_1,
+                        crossAxisSpacing: DimensionConstant.SIZE_1,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        final AssetEntity item = _mediaList[index];
+                        if (index < _mediaList.length) {
+                          return GestureDetector(
+                            onTap: () {
+                              _chooseEntity(item);
+                            },
+                            child: GridTile(
                               child: Image(
                                 image: AssetEntityImageProvider(
-                                  e,
+                                  item,
                                 ),
                                 fit: BoxFit.cover,
                               ),
                             ),
-                          )
-                          .toList(),
+                          );
+                        } else {
+                          return const GridTile(
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: ColorConstant.FF3897F0,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      itemCount: _mediaList.length,
                     ),
                   ),
                 ],

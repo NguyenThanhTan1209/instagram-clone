@@ -1,4 +1,3 @@
-import '../blocs/authentication/authentication_event.dart';
 import '../models/user.dart';
 import '../services/authentication_provider.dart';
 
