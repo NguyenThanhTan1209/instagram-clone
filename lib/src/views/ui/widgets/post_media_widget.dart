@@ -10,12 +10,10 @@ class PostMediaWidget extends StatefulWidget {
   const PostMediaWidget({
     super.key,
     required this.post,
-    required this.screenWith,
     required this.postIndex,
   });
 
   final Post post;
-  final double screenWith;
   final ValueNotifier<int> postIndex;
 
   @override
@@ -29,18 +27,24 @@ class _PostMediaWidgetState extends State<PostMediaWidget> {
 
     return Stack(
       children: <Widget>[
-        if (widget.post.images.length == 1)
-          MediaItemWidget(mediaUrl: widget.post.images.first)
+        if (widget.post.media.length == 1)
+          MediaItemWidget(
+            mediaUrl: widget.post.media.first,
+            isShowControls: true,
+          )
         else
           CarouselSlider.builder(
-            itemCount: widget.post.images.length,
+            itemCount: widget.post.media.length,
             itemBuilder: (
               BuildContext context,
               int index,
               int realIndex,
             ) {
-              final String imageUrl = widget.post.images[index];
-              return MediaItemWidget(mediaUrl: imageUrl);
+              final String imageUrl = widget.post.media[index];
+              return MediaItemWidget(
+                mediaUrl: imageUrl,
+                isShowControls: true,
+              );
             },
             options: CarouselOptions(
               height: screenWith,
@@ -53,7 +57,7 @@ class _PostMediaWidgetState extends State<PostMediaWidget> {
               },
             ),
           ),
-        if (widget.post.images.length>1)
+        if (widget.post.media.length > 1)
           Align(
             alignment: Alignment.topRight,
             child: Container(
@@ -80,7 +84,7 @@ class _PostMediaWidgetState extends State<PostMediaWidget> {
                   Widget? child,
                 ) {
                   return Text(
-                    '$value/${widget.post.images.length}',
+                    '$value/${widget.post.media.length}',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           fontSize: DimensionConstant.SIZE_12,
                           color: ColorConstant.WHITE,

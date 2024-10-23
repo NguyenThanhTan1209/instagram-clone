@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -6,6 +5,9 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../../business_logic/blocs/user/user_bloc.dart';
 import '../../../business_logic/blocs/user/user_event.dart';
 import '../../../business_logic/blocs/user/user_state.dart';
+import '../../../business_logic/blocs/user_post_list/user_post_list_bloc.dart';
+import '../../../business_logic/blocs/user_post_list/user_post_list_event.dart';
+import '../../../business_logic/blocs/user_post_list/user_post_list_state.dart';
 import '../../../business_logic/models/post.dart';
 import '../../../business_logic/models/user.dart';
 import '../../../business_logic/services/authentication_provider.dart';
@@ -15,6 +17,7 @@ import '../../utils/path_constant.dart';
 import '../../utils/route_constant.dart';
 import '../../utils/string_constant.dart';
 import '../widgets/drawer_list_item_widget.dart';
+import '../widgets/media_item_widget.dart';
 import '../widgets/profile_infomation_column_widget.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -25,7 +28,7 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin{
   final int _profileContentLength = 2;
   late final TabController _tabController;
   final List<Map<String, String>> _iconPathDatas = <Map<String, String>>[
@@ -73,6 +76,11 @@ class _UserProfileScreenState extends State<UserProfileScreen>
     context
         .read<UserBloc>()
         .add(GetUserByID(userID: AuthenticationProvider().currentUser!.uid));
+    context.read<UserPostListBloc>().add(
+          GetPostListByUserID(
+            userID: AuthenticationProvider().currentUser!.uid,
+          ),
+        );
     _tabController = TabController(length: _profileContentLength, vsync: this);
   }
 
@@ -235,7 +243,8 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                               .user.avatarPath.isNotEmpty
                                           ? NetworkImage(state.user.avatarPath)
                                           : const AssetImage(
-                                              PathConstant.DEFAULT_AVATAR_IMAGE_PATH,
+                                              PathConstant
+                                                  .DEFAULT_AVATAR_IMAGE_PATH,
                                             ) as ImageProvider,
                                     ),
                                   ),
@@ -246,12 +255,12 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                   ),
                                   // const Spacer(),
                                   ProfileInfoColumnWidget(
-                                    number: state.user.followerTotal,
+                                    number: state.user.followers.length,
                                     label: StringConstant.FOLLOWERS_LABEL,
                                   ),
                                   // const Spacer(),
                                   ProfileInfoColumnWidget(
-                                    number: state.user.followingTotal,
+                                    number: state.user.followings.length,
                                     label: StringConstant.FOLLOWING_LABEL,
                                   ),
                                   // const Spacer(),
@@ -464,27 +473,32 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                       child: TabBarView(
                         controller: _tabController,
                         children: <Widget>[
-                          GridView.count(
-                            crossAxisCount: 3,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: state.user.posts
-                                .map(
-                                  (Post e) => CachedNetworkImage(
-                                    imageUrl: e.images.first,
-                                    fit: BoxFit.cover,
-                                    placeholder:
-                                        (BuildContext context, String url) =>
-                                            const CircularProgressIndicator(),
-                                    errorWidget: (
-                                      BuildContext context,
-                                      String url,
-                                      Object error,
-                                    ) =>
-                                        const Icon(Icons.error),
+                          BlocBuilder<UserPostListBloc, UserPostListState>(
+                            builder:
+                                (BuildContext context, UserPostListState state) {
+                              if (state is UserPostListSuccess) {
+                                return GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
                                   ),
-                                )
-                                .toList(),
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    final Post post = state.postList[index];
+                                    return GridTile(
+                                      child: MediaItemWidget(
+                                        mediaUrl: post.media.first,
+                                        isShowControls: false,
+                                      ),
+                                    );
+                                  },
+                                  itemCount: state.postList.length,
+                                );
+                              }
+                              return const SizedBox();
+                            },
                           ),
                           Card(
                             child: ListTile(

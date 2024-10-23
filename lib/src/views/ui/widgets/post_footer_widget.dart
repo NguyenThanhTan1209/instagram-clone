@@ -76,7 +76,7 @@ class PostFooterWidget extends StatelessWidget {
                     controller: PageController(
                       initialPage: value - 1,
                     ),
-                    count: post.images.length,
+                    count: post.media.length,
                   );
                 },
               ),

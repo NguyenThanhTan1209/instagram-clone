@@ -93,10 +93,9 @@ class _SignUpWithPhoneScreenState extends State<SignUpWithPhoneScreen> {
                         listener:
                             (BuildContext context, AuthenticationState state) {
                           if (state is VerifyPhoneNumberSucess) {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
+                            Navigator.of(context).pushNamed(
                               RouteConstant.SEND_OTP_SCREEN_ROUTE,
                               arguments: state.verificationId,
-                              (Route<dynamic> route) => false,
                             );
                           }
                           if (state is AuthenticationFailed) {

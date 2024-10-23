@@ -4,7 +4,7 @@ class Post {
     required this.userID,
     required this.avatarPath,
     required this.userName,
-    required this.images,
+    required this.media,
     required this.createdDate,
     required this.likedUsers,
     required this.comments,
@@ -18,7 +18,7 @@ class Post {
       userID: json['userID'] as String,
       userName: json['userName'] as String,
       avatarPath: json['avatarPath'] as String,
-      images: List<String>.from(json['images'] as List<dynamic>),
+      media: List<String>.from(json['media'] as List<dynamic>),
       likedUsers: List<String>.from(json['likedUsers'] as List<dynamic>),
       comments: List<String>.from(json['comments'] as List<dynamic>),
       content: json['content'] as String,
@@ -31,7 +31,7 @@ class Post {
         'postID': postID,
         'userID': userID,
         'userName': userName,
-        'images': images,
+        'media': media,
         'likedUsers': likedUsers,
         'comments': comments,
         'content': content,
@@ -44,7 +44,7 @@ class Post {
   String userID;
   String userName;
   String avatarPath;
-  List<String> images;
+  List<String> media;
   List<String>? likedUsers;
   List<String>? comments;
   String content;
